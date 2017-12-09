@@ -50,8 +50,8 @@ def draw(xData, yData,title):
 
 
 if __name__ == '__main__':
-	realfilePath = 'real.csv'#change here
-	predictfilePath = 'predict.csv'#change here 
-	graphTitle = 'this is title'#change here
+	realfilePath = '/home/fw/Documents/CN-group-project/data/temp_result/task3_randomforest_real.csv'#change here
+	predictfilePath = '/home/fw/Documents/CN-group-project/data/temp_result/task3_randomforest_predict.csv'#change here
+	graphTitle = 'task1_randomforest'#change here
 	main(realfilePath,predictfilePath,graphTitle)
 

@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import sklearn
 import xgboost as xgb
+from utils import output_real_and_predict_data,draw
 
 # read raw data
 train = pd.read_csv('../data/raw_data.csv')
@@ -62,9 +63,17 @@ num_round = 200
 # train for task 1
 bst1 = xgb.train(param[1], dtrain[1], num_round, watchlist[1])
 
+y1_hat= bst1.predict(dtest[1])
+output_real_and_predict_data(y1_val,y1_hat,'../data/temp_result/','task1_xgb')
+
+
 # train for task 2
 bst2 = xgb.train(param[2], dtrain[2], num_round, watchlist[2])
+y2_hat= bst2.predict(dtest[2])
+output_real_and_predict_data(y2_val,y2_hat,'../data/temp_result/','task2_xgb')
+
 
 # train for task 3
 bst3 = xgb.train(param[3], dtrain[3], num_round, watchlist[3])
-
+y3_hat= bst3.predict(dtest[3])
+output_real_and_predict_data(y3_val,y3_hat,'../data/temp_result/','task3_xgb')
