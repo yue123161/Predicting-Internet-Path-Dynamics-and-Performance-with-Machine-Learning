@@ -6,3 +6,5 @@ data/\.~lock\.ALL_PATHS_featuretable\.csv#
 \.idea/
 
 data/temp_result/
+
+data/\.~lock\.raw_data\.csv#
