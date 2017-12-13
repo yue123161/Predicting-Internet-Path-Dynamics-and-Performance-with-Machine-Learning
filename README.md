@@ -52,14 +52,42 @@ and the authors' release of [**NETPerfTrace**](https://github.com/SAWassermann/N
 
 ## TODO
 
-- 仔细阅读论文, 对论文中的细节想清楚, 不清楚的地方在群里讨论 -> Yuheng, Hao, Shukai
-- 绘制 sample rate & relative prediction error 图 -> who?
-  - 输入是两个`.csv`文件, 一个是预测值, 一个是真实值
+- ~~仔细阅读论文, 对论文中的细节想清楚, 不清楚的地方在群里讨论 -> Yuheng, Hao, Shukai~~
+- ~~绘制 sample rate & relative prediction error 图 -> who?~~
+  - ~~输入是两个`.csv`文件, 一个是预测值, 一个是真实值~~
 - 进行数据的整理, 按照每个path进行时序的梳理, 增加一些feature, 以方便下一步的时序建模的工作 ->who?
   - 根据论文中对数据的描述以及对数据文件的查看, 目前的数据*应该*(不完全确定)是按照时序排列下来的, 但是还不能用于实际的序列建模
   - 对**sampleResLife**预测问题, 可能需要添加一维feature是`last_duration`, 就是上一次的完整duration的长度,
   - 对**nbRouteChangesInNextSlot**和**nextavgRTT**预测问题, 还需要进一步思考.
 
+
+## TODO LIST
+
+###Task For 王浩
+
+1. 利用前k%的数据，计算feature，然后后1-k%利用这些feature来预测寿命
+
+   前k%一个path只算出一个avg，后面不更新
+
+2. ~~前K%，要算出num_route_k 个avg~~
+
+3. 前K%统一计算统计值，后面route更新
+
+4. 取一个timeslot，窗口
+
+   ​
+
+5. 曲线下面积
+
+###Task For 植禹衡
+
+1. raw data，看看traceroute能提供哪些feature，如果没有额外的数据，就不做更多东西了
+2. 分析数据的周期性，可视化出来
+3. 看看能不能用一个月的数据
+4. LSTM 的数据处理：有两种想法，要不要喂label进去：目前就只按照route来算。
+   1. 但是一个时间窗口
+   2. route duration需要按照route来
+   3. rtt可以直接连着来
 
 
 
