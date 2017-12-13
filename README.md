@@ -63,7 +63,7 @@ and the authors' release of [**NETPerfTrace**](https://github.com/SAWassermann/N
 
 ## TODO LIST
 
-###Task For 王浩
+### Task For 王浩
 
 1. 利用前k%的数据，计算feature，然后后1-k%利用这些feature来预测寿命
 
@@ -79,7 +79,7 @@ and the authors' release of [**NETPerfTrace**](https://github.com/SAWassermann/N
 
 5. 曲线下面积
 
-###Task For 植禹衡
+### Task For 植禹衡
 
 1. raw data，看看traceroute能提供哪些feature，如果没有额外的数据，就不做更多东西了
 2. 分析数据的周期性，可视化出来
@@ -89,9 +89,24 @@ and the authors' release of [**NETPerfTrace**](https://github.com/SAWassermann/N
    2. route duration需要按照route来
    3. rtt可以直接连着来
 
+### 20171214总结
 
+1. LSTM的task1和task3直接使用每行的`traceroute`的数据即可
+2. 对于用LSTM时的feature输入问题, 两种处理方式都尝试一下 (i) 只输入一个scalar (ii) 还要输入其他的path的统计值feature
+3. 对于task1需要预测的值, 分成两种, 一个(i)直接预测剩余时间, 另一个(ii)预测这次route的duration
+4. 找route之间的潜在相似性的论文, 或者问老师
+5. 
+### 一些需要做的实验
+#### 基础模型部分 random forest & XGBoost
+一下三种数据处理方式的task1的label一种是剩余时间,一种是这次的route duration
+1. **k&fix**: 利用前k%的数据，计算feature，然后后1-k%利用这些feature来预测寿命,前k%一个path只算出一个avg，后面不更新
+2. **k&update**: 前K%统一计算统计值，后面route更新
+3. **timeslot&updata**: 取一个timeslot，窗口
 
-
+#### LSTM部分
+不按照route来, 还是按照每行的`traceroute`的数据即可. task1同样是预测剩余寿命/duration两种都做
+1. 输入数据只有当前的值, 比如task1就是当前的寿命, 然后预测剩余寿命/duration
+2. 输入数据是当前值和这个path的一些统计值,作为一个vector输入. 然后预测剩余寿命/duration
 
 
 ## Group member
@@ -104,5 +119,5 @@ and the authors' release of [**NETPerfTrace**](https://github.com/SAWassermann/N
 
 - Shukai Liu
 
-  ​
+  
 
