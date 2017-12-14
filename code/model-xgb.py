@@ -35,17 +35,35 @@ dtest[3] = xgb.DMatrix(data=X_val,label=y3_val)
 # set parameters for three tasks
 param = [None]*4
 param[1] = {
-    'max_depth':3,
-    'eta':0.3,
-    'silent':1,
-    'objective':'reg:linear'
-        }
+"reg_alpha": 0.0006,
+"colsample_bytree": 0.8,
+"scale_pos_weight": 1,
+"learning_rate": 0.0175,
+"nthread": 16,
+"min_child_weight": 11,
+"n_estimators": 1000,
+"subsample": 0.8,
+"reg_lambda": 0.0049,
+"seed": 27,
+"objective":'reg:linear',
+"max_depth": 7,
+"gamma": 0.0,
+}
 param[2] = {
-    'max_depth':20,
-    'eta':0.3,
-    'silent':1,
-    'objective':'reg:linear'
-        }
+"reg_alpha": 0.0005,
+"colsample_bytree": 0.7,
+"scale_pos_weight": 1,
+"learning_rate": 0.005,
+"nthread": 8,
+"min_child_weight": 13,
+"n_estimators": 1000,
+"subsample": 0.25,
+"reg_lambda": 0.0046,
+"seed": 27,
+"objective":'reg:linear',
+"max_depth": 5,
+"gamma": 0.7,
+}
 param[3] = {
     'max_depth':10,
     'eta':0.3,
@@ -61,19 +79,19 @@ watchlist[3] = [(dtest[3],'eval'), (dtrain[3],'train')]
 num_round = 200
 
 # train for task 1
-bst1 = xgb.train(param[1], dtrain[1], num_round, watchlist[1])
+bst1 = xgb.train(param[1], dtrain[1], 1000, watchlist[1])
 
 y1_hat= bst1.predict(dtest[1])
-output_real_and_predict_data(y1_val,y1_hat,'../data/temp_result/','task1_xgb')
+output_real_and_predict_data(y1_val,y1_hat,'../data/temp_result/','task1_xgb_tuned')
 
 
-# train for task 2
-bst2 = xgb.train(param[2], dtrain[2], num_round, watchlist[2])
-y2_hat= bst2.predict(dtest[2])
-output_real_and_predict_data(y2_val,y2_hat,'../data/temp_result/','task2_xgb')
+# # train for task 2
+# bst2 = xgb.train(param[2], dtrain[2], 1000, watchlist[2])
+# y2_hat= bst2.predict(dtest[2])
+# output_real_and_predict_data(y2_val,y2_hat,'../data/temp_result/','task2_xgb_tuned')
 
 
-# train for task 3
-bst3 = xgb.train(param[3], dtrain[3], num_round, watchlist[3])
-y3_hat= bst3.predict(dtest[3])
-output_real_and_predict_data(y3_val,y3_hat,'../data/temp_result/','task3_xgb')
+# # train for task 3
+# bst3 = xgb.train(param[3], dtrain[3], num_round, watchlist[3])
+# y3_hat= bst3.predict(dtest[3])
+# output_real_and_predict_data(y3_val,y3_hat,'../data/temp_result/','task3_xgb')

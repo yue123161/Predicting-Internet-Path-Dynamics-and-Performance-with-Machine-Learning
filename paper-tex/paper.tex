@@ -2,7 +2,10 @@
 
 \usepackage{booktabs} % For formal tables
 \usepackage{url}
-
+\newcommand{\kai}[1]{{\bf \color{blue} [[Shukai says ``#1'']]}}
+\newcommand{\heng}[1]{{\bf \color{cyan} [[Yuheng says ``#1'']]}}
+\newcommand{\hao}[1]{{\bf \color{red} [[Hao says ``#1'']]}}
+\newcommand{\hui}[1]{{\bf \color{purple} [[Zhenghui says ``#1'']]}}
 % Copyright
 %\setcopyright{none}
 %\setcopyright{acmcopyright}
@@ -129,17 +132,63 @@ We study the problem of predicting internet path dynamics and performance. We us
 
 
 \maketitle
-
+\hui{I think we should focus on the process not the final result, which is also important.}
 \section{Introduction}
 
-TODO 
-\section{Related Works}
-TODO
+1. introduce the original paper: their task, method, and dataset
 
-\section{Methodology}
-TODO
+2. we find some drawbacks in their data. For instance, the route change times problem discussed in github. And the way they process the data.
+
+3. we try some other models to get better performance like xgboost and LSTM.
+
+\section{Related Works}
+1. we introduce the original paper in details
+
+2. we can introduce some other machine learning methods applied in computer network scenarios. \hui{I'll take this part}
+
+3. very briefly introduce xgboost and lstm
+
+\section{Data Analysis}
+\hui{I think this is a important part, who will take this part?}
+
+1. We can plot some figures of the statistics of data, like the distribution of the route duration and avgRTT. 
+
+2. We can further discuss the relation between routes in one path or in different paths.
+
+3. Then we could discuss why the authors of the paper process the data in a wrong way
+
+4. We show our solution for data process. three ways for random forest models.
+
 \section{Experiment}
-TODO
+\subsection{Classic Models}
+We show the experiment results of the 3 different data we obtained, namely \textbf{K\&fix},\textbf{K\&update},\textbf{timeslot\&update}. We need to find some difference between our 3 data processing methods and the authors', i.e.,\textbf{origin}. 
+
+The experiments we need to conduct are as follows:
+\begin{itemize}
+
+\item 1. \textbf{K\&fix}+RF
+\item 2. \textbf{K\&update}+RF
+\item 3. \textbf{timeslot\&update}+RF
+\item 4. \textbf{origin}+RF
+\item 5. \textbf{K\&fix}+xgBoost
+\item 6. \textbf{K\&update}+xgBoost
+\item 7. \textbf{timeslot\&update}+xgBoost
+\item 8. \textbf{origin}+xgBoost
+\end{itemize}
+
+
+\hui{Note}We first predict the route duration instead of resLife. Further study on the difference between these two predicting objective could be conduct if we have time. Currently, we predict the route duration for task 1, because we can only predict this when we use LSTM.
+
+
+\subsection{Deep Models}
+
+There are two kinds of input for the LSTM at each timestep, (i) one simple scalar (ii) a vector.
+The experiments we need to conduct are as follows:
+\begin{itemize}
+\item scalar input + LSTM
+\item vector input + LSTM
+\end{itemize}
+
 \section{Conclusions}
 TODO
 
