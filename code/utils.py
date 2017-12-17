@@ -131,6 +131,15 @@ def get_task_data_from_df(df,task):
 
 
 def RF_task(train_path,test_path,task,task_name,n_estimators=10):
+    """
+    train a rf model
+    :param train_path: the path of dir that contains the .csv for each path, trianing data
+    :param test_path: the path of dir that contains the .csv for each path, testing data
+    :param task: int, 1,2,3
+    :param task_name: the name of this experiment, should include the details
+    :param n_estimators: number of trees
+    :return: none
+    """
     trainDF=get_pd_from_path(train_path)
     testDF = get_pd_from_path(test_path)
     train_X , train_y = get_task_data_from_df(trainDF,task)
@@ -144,6 +153,15 @@ def RF_task(train_path,test_path,task,task_name,n_estimators=10):
 
 
 def XGB_task(train_path,test_path,task,task_name,n_estimators=10):
+    """
+    train a xgb model
+    :param train_path: the path of dir that contains the .csv for each path, trianing data
+    :param test_path: the path of dir that contains the .csv for each path, testing data
+    :param task: int, 1,2,3
+    :param task_name: the name of this experiment, should include the details
+    :param n_estimators: number of trees
+    :return: none
+    """
     trainDF=get_pd_from_path(train_path)
     testDF = get_pd_from_path(test_path)
     train_X , train_y = get_task_data_from_df(trainDF,task)
@@ -154,19 +172,19 @@ def XGB_task(train_path,test_path,task,task_name,n_estimators=10):
 
     if task==1:
         param = {
-                # "reg_alpha": 0.0,
-                # "colsample_bytree": 0.9,
-                # "scale_pos_weight": 1,
-                # "learning_rate": 0.05,
+                "reg_alpha": 0.0,
+                "colsample_bytree": 0.9,
+                "scale_pos_weight": 1,
+                "learning_rate": 0.05,
                 "nthread": 16,
-                # "min_child_weight": 5,
-                # "n_estimators": 100,
-                # "subsample": 0.7,
-                # "reg_lambda": 0.0032,
-                # "seed": 27,
+                "min_child_weight": 5,
+                "n_estimators": 100,
+                "subsample": 0.7,
+                "reg_lambda": 0.0032,
+                "seed": 27,
                 "objective":'reg:linear',
-                # "max_depth": 7,
-                # "gamma": 0.0,
+                "max_depth": 7,
+                "gamma": 0.0,
                 }
     elif task==2:
         param = {
@@ -206,3 +224,18 @@ def XGB_task(train_path,test_path,task,task_name,n_estimators=10):
     output_real_and_predict_data(test_y, y_hat, '../data/temp_result/', task_name)
 
 
+def get_lstm_data_from_df(df,task,time_steps):
+    """
+    convert the df data structure into lstm suitable form, vector as input
+    :param df: the input data, could be train df or test df
+    :param task: the task that we want to conduct
+    :param time_steps: the time_steps of a sequence
+    :return: X, y, feature_dimension
+
+    X.shape=[samples, time steps, features]
+    y.shape=[samples, time steps]
+    feature_dimension = X.shape[2]
+
+    """
+    # fixme: what's y.shape?
+    X,y=get_task_data_from_df(df,task)
