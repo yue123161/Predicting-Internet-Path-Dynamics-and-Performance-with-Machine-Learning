@@ -79,7 +79,7 @@ watchlist[3] = [(dtest[3],'eval'), (dtrain[3],'train')]
 num_round = 200
 
 # train for task 1
-bst1 = xgb.train(param[1], dtrain[1], 1000, watchlist[1])
+bst1 = xgb.train(param[1], dtrain[1], 100, watchlist[1])
 
 y1_hat= bst1.predict(dtest[1])
 output_real_and_predict_data(y1_val,y1_hat,'../data/temp_result/','task1_xgb_tuned')
