@@ -65,29 +65,31 @@ and the authors' release of [**NETPerfTrace**](https://github.com/SAWassermann/N
 
 ### Task For 王浩
 
-1. 利用前k%的数据，计算feature，然后后1-k%利用这些feature来预测寿命
+1. ~~利用前k%的数据，计算feature，然后后1-k%利用这些feature来预测寿命~~
 
-   前k%一个path只算出一个avg，后面不更新
+   ~~前k%一个path只算出一个avg，后面不更新~~
 
 2. ~~前K%，要算出num_route_k 个avg~~
 
-3. 前K%统一计算统计值，后面route更新
-
-4. 取一个timeslot，窗口
-
-   ​
-
+3. ~~前K%统一计算统计值，后面route更新~~
+4. ~~取一个timeslot，窗口~~
 5. 曲线下面积
 
 ### Task For 植禹衡
 
-1. raw data，看看traceroute能提供哪些feature，如果没有额外的数据，就不做更多东西了
+1. ~~raw data，看看traceroute能提供哪些feature，如果没有额外的数据，就不做更多东西了~~
 2. 分析数据的周期性，可视化出来
-3. 看看能不能用一个月的数据
-4. LSTM 的数据处理：有两种想法，要不要喂label进去：目前就只按照route来算。
+3. ~~看看能不能用一个月的数据~~
+4.~~LSTM 的数据处理：有两种想法，要不要喂label进去：目前就只按照route来算。
    1. 但是一个时间窗口
    2. route duration需要按照route来
-   3. rtt可以直接连着来
+   3. rtt可以直接连着来~~ `这部分王政晖来做`
+5. 论文数据分析部分
+
+### task for 王政晖
+0. 普通模型实验
+1. LSTM 数据处理
+2. LSTM 实验
 
 ### 20171214总结
 
