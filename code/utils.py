@@ -224,18 +224,46 @@ def XGB_task(train_path,test_path,task,task_name,n_estimators=10):
     output_real_and_predict_data(test_y, y_hat, '../data/temp_result/', task_name)
 
 
-def get_lstm_data_from_df(df,task,time_steps):
+def get_lstm_data_from_df(train_df,test_df,task,time_steps,min_samples_for_path=5):
     """
     convert the df data structure into lstm suitable form, vector as input
-    :param df: the input data, could be train df or test df
+
+    the current process method: use the previous k trace-route as previous k time-steps,
+    and also the label of the trace-route which does not belong to the current route.
+    The mark to distinguish different route is `sampleRouteAge`, because every route
+    begins with a `sampleRouteAge`=0.
+    But one thing left is what should be fed into the `label` feature of the trace-route
+    belongs to current route?
+
+    :param train_df: the input data, train df
+    :param test_df: the input data, test df
     :param task: the task that we want to conduct
     :param time_steps: the time_steps of a sequence
-    :return: X, y, feature_dimension
+    :param min_samples_for_path: min_samples_for_path, int, default = 5
+    :return: train_lstm_X, train_lstm_y, test_lstm_X, test_lstm_y, feature_dimension
 
-    X.shape=[samples, time steps, features]
-    y.shape=[samples, time steps]
+    numpy arrays is ok
+    train_lstm_X.shape=[samples, time steps, features]
+    train_lstm_y.shape=[samples, time steps]
+    test_lstm_X.shape=[samples, time steps, features]
+    test_lstm_y.shape=[samples, time steps]
     feature_dimension = X.shape[2]
 
     """
     # fixme: what's y.shape?
-    X,y=get_task_data_from_df(df,task)
+    train_X, train_y = get_task_data_from_df(train_df,task)
+    test_X, test_y = get_task_data_from_df(test_df, task)
+
+    train_len = train_X.shape[0]
+    test_len = test_X.shape[0]
+    min_samples_for_path = 5
+
+
+    if train_len < time_steps+min_samples_for_path:
+        return None, None, None, None, None
+
+
+
+
+
+
