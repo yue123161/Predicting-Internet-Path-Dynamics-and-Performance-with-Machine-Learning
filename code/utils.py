@@ -89,14 +89,10 @@ def get_pd_from_path(path):
     list=[]
     in_file_list=os.listdir(path)
     for in_file in  in_file_list:
-        # print in_file
         try:
-            # tmp=
-            # print tmp
             list.append(pd.read_csv(path+in_file))
         except:
             pass
-    # print list
     big_pd = pd.concat(list, axis=0, join='outer', join_axes=None, ignore_index=False,
                     keys=None, levels=None, names=None, verify_integrity=False,
                     copy=True)
@@ -233,12 +229,15 @@ def get_lstm_data_from_df(train_df,test_df,task,time_steps,min_samples_for_path=
     The mark to distinguish different route is `sampleRouteAge`, because every route
     begins with a `sampleRouteAge`=0.
     But one thing left is what should be fed into the `label` feature of the trace-route
-    belongs to current route?
+    belongs to current route? For now, we just feed 0 to indicate that the trace-route
+    belongs to current route
+
+    k+1 inputs and 1 output.
 
     :param train_df: the input data, train df
     :param test_df: the input data, test df
     :param task: the task that we want to conduct
-    :param time_steps: the time_steps of a sequence
+    :param time_steps: the time_steps of a sequence, time_steps-1 for previous, and the final one for final predict
     :param min_samples_for_path: min_samples_for_path, int, default = 5
     :return: train_lstm_X, train_lstm_y, test_lstm_X, test_lstm_y, feature_dimension
 
@@ -251,19 +250,125 @@ def get_lstm_data_from_df(train_df,test_df,task,time_steps,min_samples_for_path=
 
     """
     # fixme: what's y.shape?
-    train_X, train_y = get_task_data_from_df(train_df,task)
-    test_X, test_y = get_task_data_from_df(test_df, task)
 
-    train_len = train_X.shape[0]
-    test_len = test_X.shape[0]
+    all_df = pd.concat([train_df,test_df], axis=0, join='outer', join_axes=None, ignore_index=False,
+                    keys=None, levels=None, names=None, verify_integrity=False,
+                    copy=True)
+    all_df = all_df.reset_index(drop=True)
+
+    train_X, train_y = [], []
+    test_X, test_y = [], []
+
+    train_len = train_df.shape[0]
+    test_len = test_df.shape[0]
     min_samples_for_path = 5
 
 
-    if train_len < time_steps+min_samples_for_path:
+    if train_len < time_steps + min_samples_for_path:
         return None, None, None, None, None
 
+    num_train_sequence = train_len - time_steps + 1
+    num_test_sequence = test_len
+
+    # store the index for each training sequence
+    train_index_list = []
+    for i in range(num_train_sequence):
+        train_index_list.append(range(i, i + time_steps))
+
+    # store the index for each test sequence
+    test_index_list = []
+    for i in range(num_test_sequence):
+        test_index_list.append(range(i+train_len-time_steps+1,i+train_len+1))
+    if task == 1:
+        # get the data from one [1,2,3,4,5], while considering the label for route
+        for index_list in train_index_list:
+            in_current_route_flag=True
+            seq_df = train_df.loc[index_list]
+            label = seq_df.loc[index_list[-1]]['sampleResLife']
+            for j in range(time_steps-1,0,-1):
+                index = index_list[j]
+                if not in_current_route_flag:
+                    break
+                if seq_df.loc[index]['sampleRouteAge'] == 0:
+                    in_current_route_flag = False
+                seq_df.loc[index, 'sampleResLife'] = 0
+            train_X.append(seq_df.values[:, :])
+            train_y.append(label)
+        # get the data from [34,35,36,37,38,39], while considering the train and test label.
+        for index_list in test_index_list:
+            in_current_route_flag = True
+            seq_df = all_df.loc[index_list]
+            label = seq_df.loc[index_list[-1]]['sampleResLife']
+            for j in range(time_steps - 1, 0, -1):
+                index = index_list[j]
+                if not in_current_route_flag:
+                    break
+                if seq_df.loc[index]['sampleRouteAge'] == 0:
+                    in_current_route_flag = False
+
+                seq_df.loc[index,'sampleResLife'] = 0
+            test_X.append(seq_df.values[:, :])
+            test_y.append(label)
+
+    elif task == 3:
+        # get the data from one [1,2,3,4,5], while considering the label for route
+        for index_list in train_index_list:
+
+            seq_df = train_df.loc[index_list]
+            label = seq_df.loc[index_list[-1]]['nextMinRTT']
+            seq_df.drop(['nextMinRTT','nextavgRTT','nextMaxRTT','nextMdevRTT'],axis=1,inplace=True)
+
+            train_X.append(seq_df.values[:, :])
+            train_y.append(label)
+
+        # get the data from [34,35,36,37,38,39], while considering the train and test label.
+        for index_list in test_index_list:
+            seq_df = all_df.loc[index_list]
+            label = seq_df.loc[index_list[-1]]['nextMinRTT']
+            seq_df.drop(['nextMinRTT', 'nextavgRTT', 'nextMaxRTT', 'nextMdevRTT'], axis=1,inplace=True)
+
+            test_X.append(seq_df.values[:, :])
+            test_y.append(label)
 
 
+    return np.array(train_X),np.array(train_y),np.array(test_X),np.array(test_y),seq_df.shape[1]
+
+def get_lstm_data_from_path(train_path,test_path,task,time_steps,min_samples_for_path=5):
+    """
+
+    like get_lstm_data_from_df
+
+    :param train_path:
+    :param test_path:
+    :param task:
+    :param time_steps:
+    :param min_samples_for_path:
+    :return:
+    """
+    train_X, train_y, test_X, test_y =[],[],[],[]
+    train_file_list = os.listdir(train_path)
+    test_file_list = os.listdir(test_path)
+    if len(train_file_list)!= len(test_file_list):
+        print 'length error!'
+        exit(-1)
+    for i in range(len(10)):
+        if train_file_list[i] == test_file_list[i]:
+            train_X_tmp, train_y_tmp, test_X_tmp, test_y_tmp, feature_num = get_lstm_data_from_df(
+                train_df=pd.read_csv(train_path+train_file_list[i]),
+                test_df=pd.read_csv(test_path+test_file_list[i]),
+                task=task,
+                time_steps=time_steps,
+                min_samples_for_path=min_samples_for_path
+            )
+            train_X.append(train_X_tmp)
+            train_y.append(train_y_tmp)
+            test_X.append(test_X_tmp)
+            test_y.append(test_y_tmp)
+    train_X=np.concatenate(train_X,0)
+    train_y=np.concatenate(train_y,0)
+    test_X=np.concatenate(test_X,0)
+    test_y=np.concatenate(test_y,0)
+    return train_X, train_y, test_X, test_y, feature_num
 
 
 

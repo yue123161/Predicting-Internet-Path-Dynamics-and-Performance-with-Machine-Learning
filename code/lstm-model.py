@@ -6,6 +6,7 @@ from keras.layers import LSTM
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 from math import sin, exp, pi, cos
+from utils import *
 
 
 def create_dataset(dataset, look_back=1):
@@ -33,8 +34,18 @@ look_back = 1
 trainX, trainY = create_dataset(data_y, look_back)
 trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
 
+train_df = pd.read_csv("/home/fw/Documents/CN-group-project/data/temp_data/1/task3/task3_70+30/70/1.csv")
+test_df= pd.read_csv("/home/fw/Documents/CN-group-project/data/temp_data/1/task3/task3_70+30/30/1.csv")
+
+trainX,trainY,testX,testY,feature_len=get_lstm_data_from_df(train_df=train_df,test_df=test_df,task=3,time_steps=5,min_samples_for_path=5)
+# reshape input to be [samples, time steps, features]
+trainX = np.reshape(trainX, (trainX.shape[0], -1, trainX.shape[1]))
+
+print trainX
+
 model = Sequential()
-model.add(LSTM(4, input_shape=(1, look_back)))
+model.add(LSTM(128, input_shape=(feature_len, 5)))
+
 model.add(Dense(1))
 model.compile(loss='mean_squared_error', optimizer='adam')
 #####################################
@@ -43,7 +54,7 @@ print trainY.shape
 
 #####################################
 
-# model.fit(trainX, trainY, epochs=10, batch_size=1, verbose=2)
+model.fit(trainX, trainY, epochs=100, batch_size=1, verbose=2)
 # trainPredict = model.predict(trainX)
 # trainPredict = scaler.inverse_transform(trainPredict)
 #
