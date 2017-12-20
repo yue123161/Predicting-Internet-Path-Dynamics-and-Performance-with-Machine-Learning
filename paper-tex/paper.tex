@@ -194,98 +194,82 @@
 	
 	\subsection{Temporal Properties of the Data}
 	We believe temporally adjacent routes and \texttt{traceroute} records of a path share some common network nodes, thus their behavior contain implicit dependencies in temporal domain. While the data are organized in the order of time, the original method ignored this property but regard them as independent instances, i.e., the prediction for the next time step only depends on the features of the present, but does not use information given by more previous time steps. This manner fails the original method to capture even the most naive temporal dependencies. Here we do not provide strict proofs of the temporal dependencies that lie in these routes but simply throw some light on the possibility of their existence.
-	
-	\begin{figure}[tp]
-		\centering
-		\begin{subfigure}[t]{0.45\linewidth}
-			\centering
-			\includegraphics[width=0.95\linewidth]{fig/total_life_8}
-			\label{fig:3.1a}
-		\end{subfigure}
-		\begin{subfigure}[t]{0.45\linewidth}
-			\centering
-			\includegraphics[width=0.95\linewidth]{fig/total_life_20}
-			\label{fig:3.1b}
-		\end{subfigure}
-		\begin{subfigure}[t]{0.45\linewidth}
-			\centering
-			\includegraphics[width=0.95\linewidth]{fig/total_life_21}
-			\label{fig:3.1c}
-		\end{subfigure}
-		\begin{subfigure}[t]{0.45\linewidth}
-			\centering
-			\includegraphics[width=0.95\linewidth]{fig/total_life_30}
-			\label{fig:3.1d}
-		\end{subfigure}
-		\caption{Temporal patterns of route life among 4 different paths.}
-		\label{fig:3.1}
-	\end{figure}
-	
-	\begin{figure}[!htp]
-		\centering
-		\begin{subfigure}[t]{0.45\linewidth}
-			\centering
-			\includegraphics[width=0.95\linewidth]{fig/route_change_8}
-			\label{fig:3.2a}
-		\end{subfigure}
-		\begin{subfigure}[t]{0.45\linewidth}
-			\centering
-			\includegraphics[width=0.95\linewidth]{fig/route_change_20}
-			\label{fig:3.2b}
-		\end{subfigure}
-		\begin{subfigure}[t]{0.45\linewidth}
-			\centering
-			\includegraphics[width=0.95\linewidth]{fig/route_change_21}
-			\label{fig:3.2c}
-		\end{subfigure}
-		\begin{subfigure}[t]{0.45\linewidth}
-			\centering
-			\includegraphics[width=0.95\linewidth]{fig/route_change_30}
-			\label{fig:3.2d}
-		\end{subfigure}
-		\caption{Temporal patterns of the number of route changes among 4 different paths.}
-		\label{fig:3.2}
-	\end{figure}
-	
-	\begin{figure}[!htp]
-		\centering
-		\begin{subfigure}[t]{0.45\linewidth}
-			\centering
-			\includegraphics[width=0.95\linewidth]{fig/RTT_8}
-			\label{fig:3.3a}
-		\end{subfigure}
-		\begin{subfigure}[t]{0.45\linewidth}
-			\centering
-			\includegraphics[width=0.95\linewidth]{fig/RTT_20}
-			\label{fig:3.3b}
-		\end{subfigure}
-		\begin{subfigure}[t]{0.45\linewidth}
-			\centering
-			\includegraphics[width=0.95\linewidth]{fig/RTT_21}
-			\label{fig:3.3c}
-		\end{subfigure}
-		\begin{subfigure}[t]{0.45\linewidth}
-			\centering
-			\includegraphics[width=0.95\linewidth]{fig/RTT_30}
-			\label{fig:3.3d}
-		\end{subfigure}
-		\caption{Temporal patterns of round trip time among 4 different paths.}
-		\label{fig:3.3}
-	\end{figure}
-	
-	Applying simple differential analysis to the raw data, we found the prediction targets indeed show local temporal patterns which we can hopefully capture with LSTMs. Fig.~\ref{fig:3.1} to Fig.~\ref{fig:3.3} exhibit differentiated results of the three prediction targets in different paths. We can see that these paths behave in somehow consistent temporal patterns along their own ways but differently from each other.
-	
-	No more solid evidence could be provided to prove the periodicity of these patterns because \textbf{pattern} itself is hard to define. However, these results are already enough to make us hopeful about the performance of LSTMs, which are expert in capturing temporal dependencies, no-matter long-term ones or short-term ones.
+	\begin{figure*} 	
+		\includegraphics[width=0.22\textwidth]{fig/total_life_8} 
+		\label{fig:3.1a}
+		\includegraphics[width=0.22\textwidth]{fig/total_life_20}
+		\label{fig:3.1b}
+		\includegraphics[width=0.22\textwidth]{fig/total_life_21}
+		\label{fig:3.1c}
+		\includegraphics[width=0.22\textwidth]{fig/total_life_30}
+		\label{fig:3.1d}
 
+		%\vspace{-20pt}  
+		\caption{Temporal patterns of route life among 4 different paths.}
+		\label{fig:3.1}  
+		%\vspace{-10pt}  
+	\end{figure*}
+
+\begin{figure*} 	
+	\includegraphics[width=0.22\textwidth]{fig/route_change_8} 
+	\label{fig:3.2a}
+	\includegraphics[width=0.22\textwidth]{fig/route_change_20}
+	\label{fig:3.2b}
+	\includegraphics[width=0.22\textwidth]{fig/route_change_21}
+	\label{fig:3.2c}
+	\includegraphics[width=0.22\textwidth]{fig/route_change_30}
+	\label{fig:3.2d}
+	
+	%\vspace{-20pt}  
+	\caption{Temporal patterns of the number of route changes among 4 different paths.}
+	\label{fig:3.2}  
+	%\vspace{-10pt}  
+\end{figure*}
+
+\begin{figure*} 	
+	\includegraphics[width=0.22\textwidth]{fig/RTT_8} 
+	\label{fig:3.3a}
+	\includegraphics[width=0.22\textwidth]{fig/RTT_20}
+	\label{fig:3.3b}
+	\includegraphics[width=0.22\textwidth]{fig/RTT_21}
+	\label{fig:3.3c}
+	\includegraphics[width=0.22\textwidth]{fig/RTT_30}
+	\label{fig:3.3d}
+	
+	%\vspace{-20pt}  
+	\caption{Temporal patterns of round trip time among 4 different paths.}
+	\label{fig:3.3}  
+	%\vspace{-10pt}  
+\end{figure*}
+	
+	Applying simple differential analysis to the raw data, we found the prediction targets indeed show local temporal patterns which we can hopefully capture with LSTMs. \textbf{Fig.\ref{fig:3.1}}, \textbf{Fig.\ref{fig:3.2}} and \textbf{Fig.\ref{fig:3.3}} exhibit differentiated results of the three prediction targets in different paths. We can see that these paths behave in somehow consistent temporal patterns along their own ways but differently from each other.
+	
+	No more solid evidence could be provided to prove the periodicity of these patterns because pattern itself is hard to define. However, these results are already enough to make us hopeful about the performance of LSTMs, which are expert in capturing temporal dependencies, no-matter long-term ones or short-term ones.
+	
 	\section{Methodology}
 	\subsection{Data Processing}
-	We reprocess the data in several more rational ways, which in other words, predicting targets using the previous information only. And to be specific, we divide the data into two sets, namely training set and test set. We calculate statistical properties (global features) of paths using three different manners: $(i)$ use the global features (max, min, average, percentiles, etc.) in the training set to get the model and predict the targets of the latter $(1-k)\%$ data, $(ii)$ use the global feature of the former $k\%$ to train the models and update these features during the predicting procedure(i.e.,update the global features everytime there is a new \texttt{traceroute} measurement of a path), and $(iii)$ only use recent \texttt{traceroute} data of certain length (namely $window\ size$) in the training set to calculate the global features, and when using the trained model to predict targets, we only consider features calculated in  recent \texttt{traceroute} measurements of the same $window\ size$ . For convenience, in the following article, we use $data-i$ to represent reprocessing the original data using the $i$th manner ($i$ can be either 1,2 or 3). And for the third manner, we use $data-3-ws\#$ to indicate the $window\ size$ of $\#$.
+	We reprocess the data in several more rational ways, which in other words, predicting targets using the previous \texttt{traceroute} data only. And to be specific, we divide the data into two sets, namely training set and test set. We calculate statistical properties (global features) of paths using three different manners: $(i)$ use the global features (max, min, average, percentiles, etc.) in the training set to get the model and predict the targets of the latter $(1-k)\%$ data, $(ii)$ use the global feature of the former $k\%$ to train the models and update these features during the predicting procedure(i.e.,update the global features everytime there is a new \texttt{traceroute} measurement of a path), and $(iii)$ only use recent \texttt{traceroute} data of certain length (namely $window\ size$) in the training set to calculate the global features, and when using the trained model to predict targets, we only consider features calculated in  recent \texttt{traceroute} measurements of the same $window\ size$ . For convenience, in the following article, we use $data-i$ to represent reprocessing the original data using the $i$th processing manner ($i$ can be either 1,2 or 3). And for the third processing manner, we use $data-3-ws\#$ to indicate the $window\ size$ of $\#$.
 	
 	\subsection{LSTM Model}
+	In order to leverage the prediction targets' character of temporal locality, we further use LSTM to do time series modeling. More formally, we take $t-1$ most recent \texttt{traceroute} measurements features $(\mathbf{x_1},\mathbf{x_2},...,\mathbf{x_{t-2}},\mathbf{x_{t-1}})$and the current \texttt{traceroute} measurement feature $\mathbf{x_t}$ together as the input,i.e.,$\mathbf{X}=(\mathbf{x_1},\mathbf{x_2},...,\mathbf{x_{t-1}},\mathbf{x_{t}})$ And the out put is a single scalar $\hat{y}$ which is supposed to be the prediction of the target $y$.
+	Let $G_{\theta}(\mathbf{x_i},\mathbf{h_i})$ the $\theta$ parameterized LSTM, we have:
+	\begin{equation}
+	\mathbf{h_{i+1}}=G_{\theta}(\mathbf{x_i},\mathbf{h_i}),
+	\end{equation}iteratively. and when we have the $\mathbf{h_{t}}$, we calculate our final prediction $\hat{y}$ by a fully connected layer with parameter $\mathbf{W}$:
+	\begin{equation}
+	\hat{y}=\mathbf{W}\cdot\mathbf{h_t},
+	\end{equation}
+	and the loss function is:
+	\begin{equation}
+	\mathcal{L}=\frac{1}{n}\sum_{i=1}^{n}(y_i-\hat{y_i})^2.
+	\end{equation}
+	The training objective is to minimize $\mathcal{L}$.
+	
+	
 	
 	\section{Experiment}
 	\subsection{Random Forest Model}
-	In our experiment, firstly, we use the standard random forest model (the same as the original paper) with the reprocessed data.  In practice, we set $k = 70, 80$ respectively. And in the third manner of processing data, the $window\ size$ is set to $10,20$ and $50$ recent \texttt{traceroute} measurements, respectively. We find that there is little difference when setting $k$ either to 70 or 80. Below are the results when $k = 70$. And we also define an evaluation metric $ABC$, which indicates the  area below the curve ($ABC\in[0,1]$). The closer $ABC$ is to $1$, the better prediction result it has. These figures in \textbf{Fig.\ref{fig:task1_RF}} and \textbf{Fig.\ref{fig:task3_RF}} and  illustrate the relationship between sample percentage and relative prediction error(i.e., $\mid Real - Predict\mid/ Real $). 
+	In our experiment, firstly, we use the standard random forest model (the same as the original paper) with the reprocessed data.  In practice, we set $k = 70, 80$ respectively. And in the third processing manner, the $window\ size$ is set to $10,20$ and $50$ recent \texttt{traceroute} measurements, respectively. We find that there is little difference when setting $k$ either to 70 or 80. Below are the results when $k = 70$. And we also define an evaluation metric $ABC$, which indicates the  area below the curve ($ABC\in[0,1]$). The closer $ABC$ is to $1$, the better prediction result it has. These figures in \textbf{Fig.\ref{fig:task1_RF}} and \textbf{Fig.\ref{fig:task3_RF}} illustrate the relationship between sample percentage and relative prediction error(i.e., $\mid Real - Predict\mid/ Real $). 
 	\begin{figure*} [!htb] 
 		%\vspace{-4pt}  
 		\centering  
@@ -297,7 +281,7 @@
 		\includegraphics[width=0.3\textwidth]{fig4/data-3-task-1-7030-windowsize20-RF.pdf}
 		\includegraphics[width=0.3\textwidth]{fig4/data-3-task-1-7030-windowsize50-RF.pdf}
 		%\vspace{-20pt}  
-		\caption{Relative prediction errors for $R_r(t)$ using three different data processing manners, and $window\ size$ for the below three figures are 10,20 and 50.}
+		\caption{Relative prediction errors for $R_r(t)$ of random forest models.}
 		\label{fig:task1_RF}  
 		%\vspace{-10pt}  
 	\end{figure*}
@@ -309,22 +293,16 @@
 		\includegraphics[width=0.3\textwidth]{fig4/data-2-task-3-7030-RF.pdf} 
 	\end{figure*} 
 	\begin{figure*} 	
-		\includegraphics[width=0.3\textwidth]{fig4/data-3-task-3-7030-windowsize10-RF.pdf} 
+		\includegraphics[width=0.3\textwidth]{fig4/data-3-task-3-7030-windowsize10-RF.pdf}
 		\includegraphics[width=0.3\textwidth]{fig4/data-3-task-3-7030-windowsize20-RF.pdf}
 		\includegraphics[width=0.3\textwidth]{fig4/data-3-task-3-7030-windowsize50-RF.pdf}
 		%\vspace{-20pt}  
-		\caption{Relative prediction errors for $avgRTT_P(t)$ using three different data processing manners, and $window\ size$ for the below three figures are 10,20 and 50.}
+		\caption{Relative prediction errors for $avgRTT_P(t)$ of random forest models.}
 		\label{fig:task3_RF}
 		%\vspace{-10pt}  
 	\end{figure*}
 	
-	\hui{Note}We first predict the route duration instead of resLife. Further study on the difference between these two predicting objective could be conduct if we have time. Currently, we predict the route duration for task 1, because we can only predict this when we use LSTM.
-	
-	
-	\subsection{LSTM Model}
-	
-	
-	Table 1 describes the $ABC$ in each figure.
+	\textbf{Tab.\ref{tab:result_RF}} describes the $ABC$ of two tasks in different data processing manner.
 	\begin{table}[tbp]
 		\centering  
 		\begin{tabular}{lcc} 
@@ -336,14 +314,24 @@
 			$data-3-ws20$ &0.6314 &0.7910 \\
 			$data-3-ws50$ &0.5359  &0.7790 \\ \hline
 		\end{tabular}
-		\caption{The $ABC$ of curves
-			in \textbf{Fig.\ref{fig:task1_RF}} and \textbf{Fig.\ref{fig:task3_RF}} }
+		\caption{Experiment results($ABC$) of random forest models. }
 		\label{tab:result_RF}
 	\end{table}
-	From \textbf{Tab.\ref{tab:result_RF}}, it can be inferred that for target $avgRTT_P(t)$: there is minor difference using five different manners to process the data. They all achieve a relatively good result, which also indicates that for average RTT reported from \texttt{traceroute} measurement, it is not sensitive to the temporal locality. However, for the first predicting target, $R_r(t)$, it is very sensitive to the temporal locality. It changes rapidly as time changes. And to achieve better prediction result, using too much previous data will result in noise and decrease the performance of the model. Because from \textbf{Tab.\ref{tab:result_RF}}, we can clearly observe that $data-3-ws10$ achieves larget $ABC$ compared with other processing manners. It considers only the recent data in a relatively short time slot. Indeed, it is reasonable to get such conclusion, for the remaining life time of a route is always closely related to their route age (which can be indicated from the previous \texttt{traceroute} data).
-	\subsection{Deep Models}
+	From \textbf{Tab.\ref{tab:result_RF}}, it can be inferred that for target $avgRTT_P(t)$: there is minor difference in processing the data in different manners . They all achieve relatively good results, which also indicates that for average RTT reported from \texttt{traceroute} measurement, it is not sensitive to the temporal locality. However, for the first predicting target, $R_r(t)$, it is very sensitive to the temporal locality. It changes rapidly as time changes. And to achieve better prediction result, using too much previous data will result in noise and decrease the performance of the model. Because from \textbf{Tab.\ref{tab:result_RF}}, we can clearly observe that $data-3-ws10$ achieves the largest $ABC$ compared with other processing manners. It considers only the recent data in a relatively short time slot. Indeed, it is reasonable to get such conclusion, for the remaining life time of a route is always closely related to their route age (which can be indicated from the recent previous \texttt{traceroute} data).
+	\subsection{LSTM Model}
 	
-	As we observed above, among the 3 different \textit{window size} (10, 20, 50), \textit{window size} of 10 alway has the best performance. Thus, we set the timesteps for our LSTM model to be 10, either.  We adopt two kinds of input for the LSTM at each timestep, (i) scalar (ii) vector.
+	As we observed above, among the 3 different \textit{window size} (10, 20, 50), \textit{window size} of 10 has the best performance. Thus, we set the timesteps for our LSTM model to be 10, either.  We adopt two kinds of input for the LSTM at each timestep: $(i)$ scalar and $(ii)$ vector.
+	
+	\begin{figure*} 	
+		\includegraphics[width=0.3\textwidth]{fig4/task1-scalar-lstm.pdf}
+		\includegraphics[width=0.3\textwidth]{fig4/task3-scalar-lstm.pdf}
+		%\vspace{-20pt}  
+		\caption{Relative prediction errors for $R_r(t)$ and $avgRTT_P(t)$ of LSTM models with scalar input.}
+		\label{fig:lstm_scalar}
+		%\vspace{-10pt}  
+	\end{figure*}
+	
+	
 	\subsubsection{Scalar Input}
 	\begin{table}[t]
 		\centering
@@ -354,21 +342,50 @@
 			\textit{LSTM-scalar-input} & 0.5264& 0.5530  \\
 			\bottomrule
 		\end{tabular}
-		\caption{ Experiment results of LSTM models with scalar input. }
+		\caption{ Experiment results($ABC$) of LSTM models with scalar input. }
 		\label{tab:lstm-scalar}
 	\end{table}
 	
-	Since we have observed some local temporal patterns with the prediction targets, The most naive approach is to feed LSTM with the previous observed scalar without any statistics of it. \textbf{Table \ref{tab:lstm-scalar}} shows the results.
 	
-	As we can see, for target $R_r(t)$, the ABC of LSTM is higher than random forest with \textit{data-1} and \textit{data-2}, but is much lower than random forest with \textit{data-3-ws10}. This shows empirical evidence that there are temporal locality with $R_r(t)$ of a path. We can infer $R_r(t)$ of a path from its recent routes better than using current features only.
+	Since we have observed some local temporal patterns with the prediction targets, The most naive approach is to feed LSTM with the previous observed scalar without any statistics of it. \textbf{Fig.\ref{fig:lstm_scalar}} and \textbf{Tab.\ref{tab:lstm-scalar}} show the results.
 	
-	To the contrast, for target $avgRTT_P(t)$, the $ABC$ of LSTM is lower than random forest in all cases, which may indicates that $avgRTT_P(t)$ is less likely to have the temporal locality.
+	As we can see, for target $R_r(t)$, the $ABC$ of LSTM is larger	 than random forest with \textit{data-1} and \textit{data-2}, but is much smaller than random forest with \textit{data-3-ws10}. This shows empirical evidence that there is temporal locality with $R_r(t)$ of a path. We can infer $R_r(t)$ of a path from its recent \texttt{traceroute} measurements better than using current features only.
 	
-	For both tasks, use scalar input for LSTM cannot outperform random forest steadily.
+	By contrast, for target $avgRTT_P(t)$, the $ABC$ of LSTM is smaller than random forest in all cases, which may indicate that $avgRTT_P(t)$ is less likely to have the temporal locality.
+	
+	For both tasks, using scalar input for LSTM cannot outperform random forest steadily.
 	
 	\subsubsection{Vector Input}
+<<<<<<< HEAD
 	In order to better leverage the data to get better performance with our LSTM model, we take the same featues for LSTM as random forest. More specifically, $F_A$ for target $R_r(t)$ and $F_C$ for target $avgRTT_P(t)$.The results are are shown in \textbf{Table~\ref{tab:lstm-vector}}.
 	\begin{table}[htp]
+=======
+	In order to better leverage the data to get better performance with our LSTM model, we take the same featues for LSTM model as those for random forest model. More specifically, Features for target $R_r(t)$ and Features for target $avgRTT_P(t)$.The results are shown in \textbf{Fig.\ref{fig:lstm-task1-vector}}, \textbf{Fig.\ref{fig:lstm-task3-vector}} and \textbf{Tab.\ref{tab:lstm-vector}}.
+	
+	\begin{figure*} 	
+		\includegraphics[width=0.3\textwidth]{fig4/data-1-task-1-7030-lstm.pdf}
+		\includegraphics[width=0.3\textwidth]{fig4/data-2-task-1-7030-lstm.pdf}
+		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws10-task-1-7030-lstm.pdf}
+		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws20-task-1-7030-lstm.pdf}
+		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws50-task-1-7030-lstm.pdf}
+		%\vspace{-20pt}  
+		\caption{Relative prediction errors for $R_r(t)$ of LSTM models with vector input.}
+		\label{fig:lstm-task1-vector}
+		%\vspace{-10pt}  
+	\end{figure*}
+	\begin{figure*} 	
+	\includegraphics[width=0.3\textwidth]{fig4/data-1-task-3-7030-lstm.pdf}
+	\includegraphics[width=0.3\textwidth]{fig4/data-2-task-3-7030-lstm.pdf}
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-ws10-task-3-7030-lstm.pdf}
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-ws20-task-3-7030-lstm.pdf}
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-ws50-task-3-7030-lstm.pdf}
+	%\vspace{-20pt}  
+	\caption{Relative prediction errors for  $avgRTT_P(t)$ of LSTM models with vector input.}
+	\label{fig:lstm-task3-vector}
+	%\vspace{-10pt}  
+	\end{figure*}
+	\begin{table}[t]
+>>>>>>> 531069172ce0e013af29fe106a8518c84477a03b
 		\centering
 		\begin{tabular}{lcc}
 			\toprule
@@ -385,11 +402,11 @@
 		\label{tab:lstm-vector}
 	\end{table}
 	
-	In general, the results is consist with our previous observation that $R_r(t)$ has more temporal locality while $avgRTT_p(t)$ seems has few or no temporal locality.
+	In general, the results consist with our previous observation that $R_r(t)$ has more temporal locality while $avgRTT_p(t)$ seems to have less or no temporal locality.
 	
-	More specificly, for target $R_r(t)$, LSTM outperforms random forest in all the 5 data set with a maximum $ABC=0.7649$. And when fed with vector input, the LSTM has a significant lift in performance than LSTM with scalar input, which shows that high quality features can be benefit to not only classic shadow models like random forest, but also \textit{deep} models.
+	More specifically, for target $R_r(t)$, LSTM model outperforms random forest model in all five data processing manners with a maximum $ABC=0.7649$. And when fed with vector input, the LSTM has a significant lift in performance than LSTM with scalar input, which shows that high quality features can be beneficial to not only classic shadow models like random forest, but also \textit{deep} models like LSTM model.
 	
-	However, when it comes to target $avgRTT_p(t)$, although LSTM does has better performance when fed with vector input rather than scalar input, its $ABC$ is still lower than random forest's. We believe it is because there is less temporal locality with $avgRTT_p(t)$. The more data you observed before, the better you can predict $avgRTT_p(t)$ in the future. Thus LSTM model cannot maximize its ability in predicting temporal patterns.
+	However, when it comes to target $avgRTT_p(t)$, although LSTM models do have better performance when fed with vector input rather than scalar input, their $ABC$s are still smaller than those of random forest. We believe it is because there is less temporal locality with reference to $avgRTT_p(t)$. The more data we observed before, the better we can predict $avgRTT_p(t)$ in the future. Thus LSTM model cannot maximize its ability in predicting temporal patterns.
 	\section{Conclusions}
 	TODO
 	
