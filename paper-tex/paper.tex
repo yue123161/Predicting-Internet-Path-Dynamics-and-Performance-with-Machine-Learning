@@ -333,7 +333,7 @@
 	
 	
 	\subsubsection{Scalar Input}
-	\begin{table}[t]
+	\begin{table}[tbp]
 		\centering
 		\begin{tabular}{lcc}
 			\toprule
@@ -356,10 +356,8 @@
 	For both tasks, using scalar input for LSTM cannot outperform random forest steadily.
 	
 	\subsubsection{Vector Input}
-<<<<<<< HEAD
 	In order to better leverage the data to get better performance with our LSTM model, we take the same featues for LSTM as random forest. More specifically, $F_A$ for target $R_r(t)$ and $F_C$ for target $avgRTT_P(t)$.The results are are shown in \textbf{Table~\ref{tab:lstm-vector}}.
-	\begin{table}[htp]
-=======
+	
 	In order to better leverage the data to get better performance with our LSTM model, we take the same featues for LSTM model as those for random forest model. More specifically, Features for target $R_r(t)$ and Features for target $avgRTT_P(t)$.The results are shown in \textbf{Fig.\ref{fig:lstm-task1-vector}}, \textbf{Fig.\ref{fig:lstm-task3-vector}} and \textbf{Tab.\ref{tab:lstm-vector}}.
 	
 	\begin{figure*} 	
@@ -388,8 +386,7 @@
 	\label{fig:lstm-task3-vector}
 	%\vspace{-10pt}  
 	\end{figure*}
-	\begin{table}[t]
->>>>>>> 531069172ce0e013af29fe106a8518c84477a03b
+	\begin{table}[tbp]
 		\centering
 		\begin{tabular}{lcc}
 			\toprule
