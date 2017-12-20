@@ -2,6 +2,8 @@
 
 \usepackage{booktabs} % For formal tables
 \usepackage{url}
+\usepackage{graphicx}
+\usepackage{subcaption}
 \newcommand{\kai}[1]{{\bf \color{blue} [[Shukai says ``#1'']]}}
 \newcommand{\heng}[1]{{\bf \color{cyan} [[Yuheng says ``#1'']]}}
 \newcommand{\hao}[1]{{\bf \color{red} [[Hao says ``#1'']]}}
@@ -40,7 +42,7 @@
 
 
 \begin{document}
-\title{Predicting Internet Path Dynamics and Performance with Machine Leanring}
+\title{Predicting Internet Path Dynamics and Performance with Machine Learning}
 %\titlenote{Produces the permission block, and
 %  copyright information}
 %\subtitle{Extended Abstract}
@@ -149,7 +151,100 @@ We study the problem of predicting internet path dynamics and performance. We us
 3. very briefly introduce xgboost and lstm
 
 \section{Data Analysis}
-\hui{I think this is a important part, who will take this part?}
+\hui{I think this is an important part, who will take this part?}
+\heng{Plots of temporally differentiated prediction targets are given here to show their behavior patterns in temporal domain, thus supporting the use of LSTMs.}
+With careful review of the data used in the original paper, here we (a) show the authors had used the data incorrectly in the context of making \textbf{predictions} and (b) reveal the temporal properties that the original method failed to employ but perfectly fits LSTMs (long short term memory neural networks), which we later use to improve the performance.
+
+\subsection{Justification of Data Processing}
+The original paper \cite{predict} made a major mistake on data employment: they implicitly used data from the future to predict events in the future, which is not possible. More specifically, all of their tests on the performance of \textit{NetPerfTrace} depend on statistics calculated out of data of all time, including the data they were to predict. Features like \{5, 15, 25...\} percentage point of route life, for example, takes the route life of all routes during the whole week into account, including route $r_i$. However, these features still take part in predicting the residual life of $r_i$. This is just like guessing something when you knew it.
+
+In fact, a principle of making predictions is to use the data \textbf{already observed} to guess the unobserved. Thus, in all the experiments of this paper, we made it a hard constraint that all the features used to predict any event at, say, time $t$, only come from the raw data collected \textbf{before} $t$. First, we re-validated the performance of classic machine learning methods on the 3 tasks according to our justified data processing manner, in the following 3 ways: (a) use the global features (max value, min value, distribution, etc.) of the former k\% data to train the models and predict the targets of the latter (1-k)\% data, (b) use the global features to train the models and update them during the predicting procedure and (c) use data in a certain recent time-slot to calculate the global features. Then we train LSTMs on these data in two different ways: (a) input only a scalar, the prediction target, to the network and (b) input the prediction target and the global features as a vector.
+
+\subsection{Temporal Properties of the Data}
+We believe temporally adjacent routes and \textbf{traceroute} records of a path share some common network nodes, thus their behavior contain implicit dependencies in temporal domain. While the data are organized in the order of time, the original method ignored this property but regard them as independent instances, i.e., the prediction for the next time step only depends on the features of the present, but does not use information given by more previous time steps. This manner fails the original method to capture even the most naive temporal dependencies. Here we do not provide strict proofs of the temporal dependencies that lie in these routes but simply throw some light on the possibility of their existence.
+
+\begin{figure}[tp]
+	\centering
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth, trim={100 100 0 0}, clip=true]{fig/total_life_8}
+		\label{fig:3.1a}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth, trim={100 100 0 0}, clip]{fig/total_life_20}
+		\label{fig:3.1b}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth, trim={100 100 0 0}, clip=true]{fig/total_life_21}
+		\label{fig:3.1c}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth, trim={100 100 0 0}, clip]{fig/total_life_30}
+		\label{fig:3.1d}
+	\end{subfigure}
+	\caption{Temporal patterns of route life among 4 different paths.}
+	\label{fig:3.1}
+\end{figure}
+
+\begin{figure}[!htp]
+	\centering
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth, trim={100 100 0 0}, clip=true]{fig/route_change_8}
+		\label{fig:3.2a}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth, trim={100 100 0 0}, clip]{fig/route_change_20}
+		\label{fig:3.2b}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth, trim={100 100 0 0}, clip=true]{fig/route_change_21}
+		\label{fig:3.2c}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth, trim={100 100 0 0}, clip]{fig/route_change_30}
+		\label{fig:3.2d}
+	\end{subfigure}
+	\caption{Temporal patterns of the number of route changes among 4 different paths.}
+	\label{fig:3.2}
+\end{figure}
+
+\begin{figure}[!htp]
+	\centering
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth, trim={100 100 0 0}, clip=true]{fig/RTT_8}
+		\label{fig:3.3a}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth, trim={100 100 0 0}, clip]{fig/RTT_20}
+		\label{fig:3.3b}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth, trim={100 100 0 0}, clip=true]{fig/RTT_21}
+		\label{fig:3.3c}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth, trim={100 100 0 0}, clip]{fig/RTT_30}
+		\label{fig:3.3d}
+	\end{subfigure}
+	\caption{Temporal patterns of round trip time among 4 different paths.}
+	\label{fig:3.3}
+\end{figure}
+
+Applying simple differential analysis to the raw data, we found the prediction targets indeed show local temporal patterns which we can hopefully capture with LSTMs. Fig.~\ref{fig:3.1} to Fig.~\ref{fig:3.3} exhibit differentiated results of the three prediction targets in different paths. We can see that these paths behave in somehow consistent temporal patterns along their own ways but differently from each other.
+
+No more solid evidence could be provided to prove the periodicity of these patterns because \textbf{pattern} itself is hard to define. However, these results are already enough to make us hopeful about the performance of LSTMs, which are expert in capturing temporal dependencies, no-matter long-term ones or short-term ones.
+
 
 1. We can plot some figures of the statistics of data, like the distribution of the route duration and avgRTT. 
 
