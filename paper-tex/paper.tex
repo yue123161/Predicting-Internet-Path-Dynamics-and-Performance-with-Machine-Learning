@@ -199,21 +199,22 @@
 		\caption{Illustration for LSTM.} 
 		\label{fig:lstm} 
 	\end{figure}
-	\begin{figure*} 	
-		\includegraphics[width=0.22\textwidth]{fig/total_life_8} 
-		\label{fig:3.1a}
-		\includegraphics[width=0.22\textwidth]{fig/total_life_20}
-		\label{fig:3.1b}
-		\includegraphics[width=0.22\textwidth]{fig/total_life_21}
-		\label{fig:3.1c}
-		\includegraphics[width=0.22\textwidth]{fig/total_life_30}
-		\label{fig:3.1d}
 
-		%\vspace{-20pt}  
-		\caption{Temporal patterns of route life among 4 different paths.}
-		\label{fig:3.1}  
-		%\vspace{-10pt}  
-	\end{figure*}
+\begin{figure*} 	
+	\includegraphics[width=0.22\textwidth]{fig/total_life_8} 
+	\label{fig:3.1a}
+	\includegraphics[width=0.22\textwidth]{fig/total_life_20}
+	\label{fig:3.1b}
+	\includegraphics[width=0.22\textwidth]{fig/total_life_21}
+	\label{fig:3.1c}
+	\includegraphics[width=0.22\textwidth]{fig/total_life_30}
+	\label{fig:3.1d}
+
+	%\vspace{-20pt}  
+	\caption{Temporal patterns of route life among 4 different paths.}
+	\label{fig:3.1}  
+	%\vspace{-10pt}  
+\end{figure*}
 
 \begin{figure*} 	
 	\includegraphics[width=0.22\textwidth]{fig/route_change_8} 
@@ -326,7 +327,7 @@
 	From \textbf{Tab.\ref{tab:result_RF}}, it can be inferred that for target $avgRTT_P(t)$: there is minor difference in processing the data in different manners . They all achieve relatively good results, which also indicates that for average RTT reported from \texttt{traceroute} measurement, it is not sensitive to the temporal locality. However, for the first predicting target, $R_r(t)$, it is very sensitive to the temporal locality. It changes rapidly as time changes. And to achieve better prediction result, using too much previous data will result in noise and decrease the performance of the model. Because from \textbf{Tab.\ref{tab:result_RF}}, we can clearly observe that $data-3-ws10$ achieves the largest $ABC$ compared with other processing manners. It considers only the recent data in a relatively short time slot. Indeed, it is reasonable to get such conclusion, for the remaining life time of a route is always closely related to their route age (which can be indicated from the recent previous \texttt{traceroute} data).
 	\subsection{LSTM Model}
 	
-	As we observed above, among the 3 different \textit{window size} (10, 20, 50), \textit{window size} of 10 has the best performance. Thus, we set the timesteps for our LSTM model to be 10, either.  We adopt two kinds of input for the LSTM at each timestep: $(i)$ scalar and $(ii)$ vector.
+	As we observed above, among the 3 different \textit{window size} (10, 20, 50), \textit{window size} of 10 has the best performance. Thus, we set the timesteps for our LSTM model to be 10, either.
 	
 	\begin{figure*} 	
 		\includegraphics[width=0.3\textwidth]{fig4/task1-scalar-lstm.pdf}
@@ -337,9 +338,42 @@
 		%\vspace{-10pt}  
 	\end{figure*}
 	
+	\begin{figure*}[t] 	
+		\includegraphics[width=0.3\textwidth]{fig4/data-1-task-1-7030-lstm.pdf}
+		\includegraphics[width=0.3\textwidth]{fig4/data-2-task-1-7030-lstm.pdf}
+	\end{figure*} 
 	
+	\begin{figure*}[t] 
+		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws10-task-1-7030-lstm.pdf}
+		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws20-task-1-7030-lstm.pdf}
+		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws50-task-1-7030-lstm.pdf}
+		%\vspace{-20pt}  
+		\caption{Relative prediction errors for $R_r(t)$ of LSTM models with vector input.}
+		\label{fig:lstm-task1-vector}
+		%\vspace{-10pt}  
+	\end{figure*}
+	
+	\begin{figure*}[t] 	
+		\includegraphics[width=0.3\textwidth]{fig4/data-1-task-3-7030-lstm.pdf}
+		\includegraphics[width=0.3\textwidth]{fig4/data-2-task-3-7030-lstm.pdf}
+	\end{figure*} 
+	
+	\begin{figure*}[t] 	
+		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws10-task-3-7030-lstm.pdf}
+		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws20-task-3-7030-lstm.pdf}
+		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws50-task-3-7030-lstm.pdf}
+		%\vspace{-20pt}  
+		\caption{Relative prediction errors for  $avgRTT_P(t)$ of LSTM models with vector input.}
+		\label{fig:lstm-task3-vector}
+		%\vspace{-10pt}  
+	\end{figure*}
+	
+	We adopt two kinds of input for the LSTM at each timestep: $(i)$ scalar and $(ii)$ vector.
 	\subsubsection{Scalar Input}
-	\begin{table}[tbp]
+	
+	Since we have observed some local temporal patterns with the prediction targets, The most naive approach is to feed LSTM with the previous observed scalar without any statistics of it. \textbf{Fig.\ref{fig:lstm_scalar}} and \textbf{Tab.\ref{tab:lstm-scalar}} show the results.
+	
+	\begin{table}[t]
 		\centering
 		\begin{tabular}{lcc}
 			\toprule
@@ -352,19 +386,19 @@
 		\label{tab:lstm-scalar}
 	\end{table}
 	
-	
-	Since we have observed some local temporal patterns with the prediction targets, The most naive approach is to feed LSTM with the previous observed scalar without any statistics of it. \textbf{Fig.\ref{fig:lstm_scalar}} and \textbf{Tab.\ref{tab:lstm-scalar}} show the results.
-	
 	As we can see, for target $R_r(t)$, the $ABC$ of LSTM is larger	 than random forest with \textit{data-1} and \textit{data-2}, but is much smaller than random forest with \textit{data-3-ws10}. This shows empirical evidence that there is temporal locality with $R_r(t)$ of a path. We can infer $R_r(t)$ of a path from its recent \texttt{traceroute} measurements better than using current features only.
 	
 	By contrast, for target $avgRTT_P(t)$, the $ABC$ of LSTM is smaller than random forest in all cases, which may indicate that $avgRTT_P(t)$ is less likely to have the temporal locality.
 	
 	For both tasks, using scalar input for LSTM cannot outperform random forest steadily.
 	
+
+	
 	\subsubsection{Vector Input}
 	%In order to better leverage the data to get better performance with our LSTM model, we take the same features for LSTM as random forest. More specifically, $F_A$ for target $R_r(t)$ and $F_C$ for target $avgRTT_P(t)$.The results are are shown in \textbf{Table~\ref{tab:lstm-vector}}.
 	
 	In order to better leverage the data to get better performance with our LSTM model, we take the same featues for LSTM model as those for random forest model. More specifically, Features for target $R_r(t)$ and features for target $avgRTT_P(t)$. The results are shown in \textbf{Fig.\ref{fig:lstm-task1-vector}}, \textbf{Fig.\ref{fig:lstm-task3-vector}} and \textbf{Tab.\ref{tab:lstm-vector}}.
+	
 	\begin{table}[tbp]
 		\centering
 		\begin{tabular}{lcc}
@@ -381,34 +415,7 @@
 		\caption{ Experiment results ($ABC$) of LSTM models with vector input. }
 		\label{tab:lstm-vector}
 	\end{table}
-	\begin{figure*} 	
-		\includegraphics[width=0.3\textwidth]{fig4/data-1-task-1-7030-lstm.pdf}
-		\includegraphics[width=0.3\textwidth]{fig4/data-2-task-1-7030-lstm.pdf}
-	\end{figure*} 
-	\begin{figure*} 
-		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws10-task-1-7030-lstm.pdf}
-		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws20-task-1-7030-lstm.pdf}
-		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws50-task-1-7030-lstm.pdf}
-		%\vspace{-20pt}  
-		\caption{Relative prediction errors for $R_r(t)$ of LSTM models with vector input.}
-		\label{fig:lstm-task1-vector}
-		%\vspace{-10pt}  
-	\end{figure*}
-	\begin{figure*} 	
-	\includegraphics[width=0.3\textwidth]{fig4/data-1-task-3-7030-lstm.pdf}
-	\includegraphics[width=0.3\textwidth]{fig4/data-2-task-3-7030-lstm.pdf}
-	\end{figure*} 
-	\begin{figure*} 	
-	\includegraphics[width=0.3\textwidth]{fig4/data-3-ws10-task-3-7030-lstm.pdf}
-	\includegraphics[width=0.3\textwidth]{fig4/data-3-ws20-task-3-7030-lstm.pdf}
-	\includegraphics[width=0.3\textwidth]{fig4/data-3-ws50-task-3-7030-lstm.pdf}
-	%\vspace{-20pt}  
-	\caption{Relative prediction errors for  $avgRTT_P(t)$ of LSTM models with vector input.}
-	\label{fig:lstm-task3-vector}
-	%\vspace{-10pt}  
-	\end{figure*}
 
-	
 	In general, the results consist with our previous observation that $R_r(t)$ has more temporal locality while $avgRTT_p(t)$ seems to have less or no temporal locality.
 	
 	More specifically, for target $R_r(t)$, LSTM model outperforms random forest model in all five data processing manners with a maximum $ABC=0.7649$. And when fed with vector input, the LSTM has a significant lift in performance than LSTM with scalar input, which shows that high quality features can be beneficial to not only classic shadow models like random forest, but also \textit{deep} models like LSTM model.
