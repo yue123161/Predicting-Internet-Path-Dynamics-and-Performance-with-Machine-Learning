@@ -14,3 +14,7 @@ paper-tex/paper\.synctex\.gz
 data/temp_data/
 
 code/utils\.pyc
+
+code/tmp\.py
+
+paper-tex/paper\.pdf
