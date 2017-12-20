@@ -138,40 +138,32 @@ We study the problem of predicting internet path dynamics and performance. We us
 \hui{I think we should focus on the process not the final result, which is also important.}
  
 \section{Introduction}
- 
-1. introduce the original paper: their task, method, and dataset
- 
-Internet paths change frequently due to inter/intra-domain routing changes, load balancing, and even misconfigurations and failures. Some of these changes can seriously disrupt performance, causing longer round-trip times, congestion, or even loss of connectivity. Thus, it is of great significant to predict Internet path dynamics and performance.
- 
+Internet paths change frequently due to inter/intra-domain routing changes, load balancing, and even misconfigurations and failures\cite{1}.
+%  V. Paxson. 1996. End-to-end Routing Behavior in the Internet. In Proceedings of the ACM SIGCOMM 1996 Conference (SIGCOMM ’96). ACM, New York, NY, USA.
+Some of these changes can seriously disrupt performance, causing longer round-trip times, congestion, or even loss of connectivity\cite{2}.
+%U. Javed, I. Cunha, D. Cho"nes, E. Katz-Bassett, T. Anderson, and A. Krishnamurthy. 2013. PoiRoot: Investigating the Root Cause of Interdomain Path Changes. In Proceedings of the ACM SIGCOMM 2013 Conference on SIGCOMM (SIGCOMM ’13). ACM, New York, NY, USA, 183–194.
+Thus, it is of great significant to predict Internet path dynamics and performance.
 
-In the original paper, the authors focus on the problem of predicting Internet path changes and path performance using \texttt{traceroute} measurements. They uses the recent route information of paths (route age for paths, route changes in past, average RTT, etc) to do some predictions of paths. Their are three predict targets: $(i)$ the remaining life time of a path (i.e., the time before a path changes), $(ii)$ the number of path changes in a future timeslot, and $(iii)$ the average RTT of a path in the next \texttt{traceroute} measurement.
+In the original paper, the authors focus on the problem of predicting Internet path changes and path performance using \texttt{traceroute} measurements. They use the recent route information of paths (route age for paths, route changes in the past, average RTT, etc) to do some predictions of paths. Their are three predict targets: $(i)$ the remaining life time of a route (i.e., the time before a route changes), $(ii)$ the number of route changes in a future timeslot, and $(iii)$ the average RTT  that the path $P$ will experience in the next \texttt{traceroute} measurement.
  
+To achieve these goals, they introduce a $NETPerfTrace$ system, which relies on a standard random forest model for prediction. Moreover, they use extensive evaluation on the impact of different input features by studying the correlations between the inputs and the prediction targets, as well as target selection techniques.
 
-To achieve these goals, it introduces a NETPerfTrace system, which relies on a standard random forest model for prediction. Moreover it uses extensive evaluation on the impact of different input features by studying the correlations between the inputs and the prediction targets, as well as target selection techniques.
- 
+The dataset the authors provide with is a full week of Paris- \texttt{traceroute} measurements performed through the M-Lab open
+Internet measurement initiative\footnote{https://www.measurementlab.net/}. They observe more than 450,000 different paths sampled through Paris-\texttt{traceroute} measurements from more than 180 geo-distributed servers. However, most of the paths are not periodically sampled during this week. And only 2,346 paths have at least 100 \texttt{traceroute} measurements during the analyzed week. So the dataset contains corresponding infomation of these 2,346 paths.
 
-The dataset it provides with is a full week of Paris \texttt{traceroute} measurements performed through the M-Lab open
- 
-Internet measurement initiative. The author observes more than 450,000 different paths sampled through Paris-traceroute measurements from more than 180 geo-distributed servers. However, most of the paths are not periodically sampled during this week. And only 2,346 paths have at least 100 \texttt{traceroute} measurements during the analyzed week. So the dataset only contains corresponding infomation of these 2,346 paths.
- 
-
-We find some drawbacks in their data process.
- 
-The author processes the data and calculates some statistics for the whole seven days and then use the data to get the ramdon forest model.
- 
-
-\hao{maybe we can put the detail discussion of their data process problems in data analysis part and delete the above sentence only leave the first one.}
- 
-
-And in our own work,firstly we reprocess the provided data in more resonable ways and use the same method (random forest) mentioned by the author to compare the results. Secondly, two other machine learning methods , xgboost and LSTM, are applied to get better performance.
+We find some drawbacks in their data process.(see section \ref{sec:dataAna} )And in our own work,firstly we reprocess the provided data in more resonable ways and use the same method (random forest) mentioned by the author to compare the results. Secondly, two other machine learning methods , xgboost and LSTM, are applied to get better performance.
  
 
 \section{Related Works}
+<<<<<<< HEAD
  
 \paragraph{The Original Paper}
+=======
+
+1. introduce the original paper
+>>>>>>> 37fe56e02f6c39e8f07dac7bcc536dfcbb3ba771
  
-In the original paper, the problem they solve is to use random forest model to predict three labels for one path: $(i)$ the remaining life time of a path (i.e., the time before a path changes), $(ii)$ the number of path changes in a future timeslot, and $(iii)$ the average RTT of a path in the next \texttt{traceroute} measurement.
- 
+In the original paper, the problem they solve is to use random forest model to predict three labels for one path: $(i)$ the remaining life time of a route for one path at time $t$ (i.e., the time before a route changes), namely $R_r(t)$, $(ii)$ the number of route changes for one path $P$ in a future timeslot $T$, namely $rcP_T$  and $(iii)$ the average RTT that the path $P$ will experience in the next \texttt{traceroute} measurement, namely $avgRTT_P(t)$.
 
 And to achieve these three targets, 69 input features are used to describe the  statistical properties of route dynamics and path latency.
  
@@ -188,6 +180,7 @@ Then they study the correlation among the input features and the targets and app
 And the authors use three different ways of selecting input features: $(i)$  use all of the 69 features to predict each target, $(ii)$ when predicting target $X$, use corresponding feature set $F_X$, $(iii)$ after wrapper-based feature selection, use the top features for each target. And finally, what they get is the third way of choosing input features can achieve better results (though there is only minor differences in output results).
  
 
+<<<<<<< HEAD
 
 \paragraph{Other Applications of MLCN}
 The last 2 decades has seen emerging applications of machine learning techniques used in computer networks \cite{kwon2017survey}. Classic methods, such as SVM, RBM, PCA and LDA, and deep learning methods including DBN, DNN and RNN, are both applied to areas like anomaly detection, web security, traffic prediction, etc. A usual procedure is to use autoencoders, both deep and classic ones, for dimensionality reduction and depend on SVM and DBN as a classifier.
@@ -195,12 +188,17 @@ The last 2 decades has seen emerging applications of machine learning techniques
 Here we mention a few representative works. Alom et al. \cite{alom2015intrusion} focus on intrusion detection system. Tao et al. \cite{tao2016big} search to build a data fusion algorithm with awareness of network security situation obtained by PCA, LDA and Fisher score. Lv et al. \cite{lv2015traffic} first develop deep learning methods in traffic flow prediction. Hou et al. \cite{hou2010malicious} aims to learn filtering rules for malicious contents automatically. Thottan et al.~\cite{thottan2003anomaly} are among the first to introduce self-learning methods to anomaly detection and a series of botnet detection methods follows up \cite{ranjan2014machine, singh2014big, beigi2014towards, zhao2013botnet}.
 
 \paragraph{XGBoost} XGBoost collects a series of machine learning algorithms under the Gradient Boosting framework. Specifically, we use the random forest library it provides, namely GBDT, as the implementation in the experiments. This library includes automatic hyper-parameter tuning, which saves us some labor.
+=======
+2. we can introduce some other machine learning methods applied in computer network scenarios. \hui{I'll take this part}
+ 
+>>>>>>> 37fe56e02f6c39e8f07dac7bcc536dfcbb3ba771
 
 \paragraph{LSTM} LSTM is an improved version of the original RNN, which largely resolved the problem of gradient vanishing and explosion in original RNN and is capable of capturing multi-scale dependencies in sequential data. The main modification it made to the original RNN unit is to add multiplicative \textbf{gate} unit that control the proportions of information to forget/pass on to the next time step. Even more modern version of LSTM like BLSTM equip the model with the ability to learn from the future, but here we only use the basic LSTM to explore the time dependencies in the dataset.
 
  
 
 \section{Data Analysis}
+ \label{sec:dataAna}
 \hui{I think this is an important part, who will take this part?}
 \heng{Plots of temporally differentiated prediction targets are given here to show their behavior patterns in temporal domain, thus supporting the use of LSTMs.}
 With careful review of the data used in the original paper, here we (a) show the authors had used the data incorrectly in the context of making \textbf{predictions} and (b) reveal the temporal properties that the original method failed to employ but perfectly fits LSTMs (long short term memory neural networks), which we later use to improve the performance.
@@ -307,40 +305,117 @@ No more solid evidence could be provided to prove the periodicity of these patte
 
 \section{Methodology}
 \subsection{Data Processing}
-
+We reprocess the data in several more rational ways, which in other words, predicting targets using the previous information only. And to be specific, we divide the data into two sets, namely training set and test set. We calculate statistical properties (global features) of paths using three different methods: $(i)$ use the global features (max, min, average, percentiles, etc.) in the training set to get the model and predict the targets of the latter $(1-k)\%$ data, $(ii)$ use the global feature of the former $k\%$ to train the models and update these features during the predicting procedure(i.e.,update the global features everytime there is a new \texttt{traceroute} measurement of a path), and $(iii)$ only use recent \texttt{traceroute} data of certain length (namely $window\ size$) in the training set to calculate the global features, and when using the trained model to predict targets, we only consider features calculated in  recent \texttt{traceroute} measurements of the same $window\ size$ . For convenience, in the following article, we use $data-i$ to represent reprocessing the original data using the $i$th method ($i$ can be either 1,2 or 3). And for the third method, we use $data-3-ws\#$ to indicate the $window\ size$ of $\#$.
 
 \subsection{LSTM Model}
 
 \section{Experiment}
-\subsection{Classic Models}
-We show the experiment results of the 3 different data we obtained, namely \textbf{K\&fix},\textbf{K\&update},\textbf{timeslot\&update}. We need to find some difference between our 3 data processing methods and the authors', i.e.,\textbf{origin}. 
+\subsection{Random Forest Model}
+In our experiment, firstly, we use the standard random forest model (the same as the original paper) with the reprocessed data.  In practice, we set $k = 70, 80$ respectively. And in the third method of processing data, the $window\ size$ is set to $10,20$ and $50$ recent \texttt{traceroute} measurements, respectively. We find that there is little difference when setting $k$ either to 70 or 80. Below are the results when $k = 70$. And we also define an evaluation metric $ABC$, which indicates the  area below the curve ($ABC\in[0,1]$). The closer $ABC$ is to $1$, the better prediction result it has. These figures in \textbf{Fig.\ref{fig:task1_RF}} and \textbf{Fig.\ref{fig:task3_RF}} and  illustrate the relationship between sample percentage and relative prediction error(i.e., $\mid Real - Predict\mid/ Real $). 
+\begin{figure*} [!htb] 
+	%\vspace{-4pt}  
+	\centering  
+	\includegraphics[width=0.3\textwidth]{fig4/data-1-task-1-7030-RF.jpg}  
+	\includegraphics[width=0.3\textwidth]{fig4/data-2-task-1-7030-RF.jpg} 
+\end{figure*} 
+\begin{figure*} 	
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-task-1-7030-windowsize10-RF.jpg} 
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-task-1-7030-windowsize20-RF.jpg}
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-task-1-7030-windowsize50-RF.jpg}
+	%\vspace{-20pt}  
+	\caption{Relative prediction errors for $R_r(t)$ using three different data processing methods, and $window\ size$ for the below three figures are 10,20 and 50.}
+	\label{fig:task1_RF}  
+	%\vspace{-10pt}  
+\end{figure*}
 
-The experiments we need to conduct are as follows:
-\begin{itemize}
-
-\item 1. \textbf{K\&fix}+RF
-\item 2. \textbf{K\&update}+RF
-\item 3. \textbf{timeslot\&update}+RF
-\item 4. \textbf{origin}+RF
-\item 5. \textbf{K\&fix}+xgBoost
-\item 6. \textbf{K\&update}+xgBoost
-\item 7. \textbf{timeslot\&update}+xgBoost
-\item 8. \textbf{origin}+xgBoost
-\end{itemize}
-
+\begin{figure*} [!htb] 
+	%\vspace{-4pt}  
+	\centering  
+	\includegraphics[width=0.3\textwidth]{fig4/data-1-task-3-7030-RF.jpg}  
+	\includegraphics[width=0.3\textwidth]{fig4/data-2-task-3-7030-RF.jpg} 
+\end{figure*} 
+\begin{figure*} 	
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-task-3-7030-windowsize10-RF.jpg} 
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-task-3-7030-windowsize20-RF.jpg}
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-task-3-7030-windowsize50-RF.jpg}
+	%\vspace{-20pt}  
+	\caption{Relative prediction errors for $avgRTT_P(t)$ using three different data processing methods, and $window\ size$ for the below three figures are 10,20 and 50.}
+	\label{fig:task3_RF}
+	%\vspace{-10pt}  
+\end{figure*}
 
 \hui{Note}We first predict the route duration instead of resLife. Further study on the difference between these two predicting objective could be conduct if we have time. Currently, we predict the route duration for task 1, because we can only predict this when we use LSTM.
 
 
+\subsection{LSTM Model}
+
+
+Table 1 describes the $ABC$ in each figure.
+\begin{table}[tbp]
+	\centering  
+	\begin{tabular}{lcc} 
+		\hline
+		Target &$R_r(t)$ &$avgRTT_P(t)$ \\ \hline
+		$data-1$ & 0.4016    &0.8124   \\        
+		$data-2$ &0.3985 &0.8261 \\        
+		$data-3-ws10$  &0.7132 &0.8018 \\
+		$data-3-ws20$ &0.6314 &0.7910 \\
+		$data-3-ws50$ &0.5359  &0.7790 \\ \hline
+	\end{tabular}
+	\caption{The $ABC$ of curves
+		 in \textbf{Fig.\ref{fig:task1_RF}} and \textbf{Fig.\ref{fig:task3_RF}} }
+	 \label{tab:result_RF}
+\end{table}
+From \textbf{Tab.\ref{tab:result_RF}}, it can be inferred that for target $avgRTT_P(t)$: there is minor difference using five different methods to process the data. They all achieve a relatively good result, which also indicates that for average RTT reported from \texttt{traceroute} measurement, it is not sensitive to the temporal locality. However, for the first predicting target, $R_r(t)$, it is very sensitive to the temporal locality. It changes rapidly as time changes. And to achieve better prediction result, using too much previous data will result in noise and decrease the performance of the model. Because from \textbf{Tab.\ref{tab:result_RF}}, we can clearly observe that $data-3-ws10$ achieves larget $ABC$ compared with other processing methods. It considers only the recent data in a relatively short time slot. Indeed, it is reasonable to get such conclusion, for the remaining life time of a route is always closely related to their route age (which can be indicated from the previous \texttt{traceroute} data).
 \subsection{Deep Models}
 
-There are two kinds of input for the LSTM at each timestep, (i) one simple scalar (ii) a vector.
-The experiments we need to conduct are as follows:
-\begin{itemize}
-\item scalar input + LSTM
-\item vector input + LSTM
-\end{itemize}
+ As we observed above, among the 3 different \textit{window size} (10, 20, 50), \textit{window size} of 10 alway has the best performance. Thus, we set the timesteps for our LSTM model to be 10, either.  We adopt two kinds of input for the LSTM at each timestep, (i) scalar (ii) vector.
+\subsubsection{Scalar Input}
+\begin{table}[t]
+	\centering
+	\begin{tabular}{lcc}
+		\toprule
+		{Target} &{$R_r(t)$} &{$avgRTT_P(t)$}\\
+		\midrule
+		\textit{LSTM-scalar-input} & 0.5264& 0.5530  \\
+		\bottomrule
+	\end{tabular}
+	\caption{ Experiment results of LSTM models with scalar input. }
+	\label{tab:lstm-scalar}
+\end{table}
 
+Since we have observed some local temporal patterns with the prediction targets, The most naive approach is to feed LSTM with the previous observed scalar without any statistics of it. \textbf{Table \ref{tab:lstm-scalar}} shows the results.
+
+As we can see, for target $R_r(t)$, the ABC of LSTM is higher than random forest with \textit{data-1} and \textit{data-2}, but is much lower than random forest with \textit{data-3-ws10}. This shows empirical evidence that there are temporal locality with $R_r(t)$ of a path. We can infer $R_r(t)$ of a path from its recent routes better than using current features only.
+
+To the contrast, for target $avgRTT_P(t)$, the $ABC$ of LSTM is lower than random forest in all cases, which may indicates that $avgRTT_P(t)$ is less likely to have the temporal locality.
+
+For both tasks, use scalar input for LSTM cannot outperform random forest steadily.
+
+\subsubsection{Vector Input}
+In order to better leverage the data to get better performance with our LSTM model, we take the same featues for LSTM as random forest. More specifically, $F_A$ for target $R_r(t)$ and $F_C$ for target $avgRTT_P(t)$.The results are are shown in \textbf{Table~\ref{tab:lstm-vector}}.
+\begin{table}[t]
+	\centering
+	\begin{tabular}{lcc}
+		\toprule
+		{Target} &{$R_r(t)$}&{$avgRTT_p(t)$} \\
+		\midrule
+		\textit{data-1}& 0.5374 & 0.7310 \\
+		\textit{data-2}& 0.4956& 0.7039     \\
+		\textit{data-3-ws10}& 0.7649 & 0.7521 \\
+		\textit{data-3-ws20}& 0.6513& 0.6901    \\
+		\textit{data-3-ws50}& 0.5647& 0.7074  \\
+		\bottomrule	
+	\end{tabular}
+	\caption{ Experiment results ($ABC$) of LSTM models with vector input. }
+	\label{tab:lstm-vector}
+\end{table}
+
+In general, the results is consist with our previous observation that $R_r(t)$ has more temporal locality while $avgRTT_p(t)$ seems has few or no temporal locality.
+
+More specificly, for target $R_r(t)$, LSTM outperforms random forest in all the 5 data set with a maximum $ABC=0.7649$. And when fed with vector input, the LSTM has a significant lift in performance than LSTM with scalar input, which shows that high quality features can be benefit to not only classic shadow models like random forest, but also \textit{deep} models.
+
+However, when it comes to target $avgRTT_p(t)$, although LSTM does has better performance when fed with vector input rather than scalar input, its $ABC$ is still lower than random forest's. We believe it is because there is less temporal locality with $avgRTT_p(t)$. The more data you observed before, the better you can predict $avgRTT_p(t)$ in the future. Thus LSTM model cannot maximize its ability in predicting temporal patterns.
 \section{Conclusions}
 TODO
 
@@ -394,6 +469,7 @@ TODO
 %\editor{Jennifer B. Sartor}
 %\editor{Theo D'Hondt}
 %\editor{Wolfgang De Meuter}
+<<<<<<< HEAD
 
 
 \begin{document}
@@ -584,3 +660,5 @@ TODO
 \bibliography{bibliography} 
 	
 \end{document}
+=======
+>>>>>>> 37fe56e02f6c39e8f07dac7bcc536dfcbb3ba771
