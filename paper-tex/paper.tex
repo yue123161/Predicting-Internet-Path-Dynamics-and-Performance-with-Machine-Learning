@@ -4,6 +4,8 @@
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{subcaption}
+\usepackage{natbib}
+\usepackage{natbib}
 \newcommand{\kai}[1]{{\bf \color{blue} [[Shukai says ``#1'']]}}
 \newcommand{\heng}[1]{{\bf \color{cyan} [[Yuheng says ``#1'']]}}
 \newcommand{\hao}[1]{{\bf \color{red} [[Hao says ``#1'']]}}
@@ -307,11 +309,11 @@
 		\begin{tabular}{lcc} 
 			\hline
 			Target &$R_r(t)$ &$avgRTT_P(t)$ \\ \hline
-			$data-1$ & 0.4016    &0.8124   \\        
-			$data-2$ &0.3985 &0.8261 \\        
-			$data-3-ws10$  &0.7132 &0.8018 \\
-			$data-3-ws20$ &0.6314 &0.7910 \\
-			$data-3-ws50$ &0.5359  &0.7790 \\ \hline
+			\textit{data-1} & 0.4016    &0.8124   \\        
+			\textit{data-2} &0.3985 &0.8261 \\        
+			\textit{data-3-ws10}  &0.7132 &0.8018 \\
+			\textit{data-3-ws20} &0.6314 &0.7910 \\
+			\textit{data-3-ws50} &0.5359  &0.7790 \\ \hline
 		\end{tabular}
 		\caption{Experiment results($ABC$) of random forest models. }
 		\label{tab:result_RF}
@@ -332,7 +334,7 @@
 	
 	
 	\subsubsection{Scalar Input}
-	\begin{table}[t]
+	\begin{table}[tbp]
 		\centering
 		\begin{tabular}{lcc}
 			\toprule
@@ -355,11 +357,15 @@
 	For both tasks, using scalar input for LSTM cannot outperform random forest steadily.
 	
 	\subsubsection{Vector Input}
+	In order to better leverage the data to get better performance with our LSTM model, we take the same featues for LSTM as random forest. More specifically, $F_A$ for target $R_r(t)$ and $F_C$ for target $avgRTT_P(t)$.The results are are shown in \textbf{Table~\ref{tab:lstm-vector}}.
+	
 	In order to better leverage the data to get better performance with our LSTM model, we take the same featues for LSTM model as those for random forest model. More specifically, Features for target $R_r(t)$ and Features for target $avgRTT_P(t)$.The results are shown in \textbf{Fig.\ref{fig:lstm-task1-vector}}, \textbf{Fig.\ref{fig:lstm-task3-vector}} and \textbf{Tab.\ref{tab:lstm-vector}}.
 	
 	\begin{figure*} 	
 		\includegraphics[width=0.3\textwidth]{fig4/data-1-task-1-7030-lstm.pdf}
 		\includegraphics[width=0.3\textwidth]{fig4/data-2-task-1-7030-lstm.pdf}
+	\end{figure*} 
+	\begin{figure*} 
 		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws10-task-1-7030-lstm.pdf}
 		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws20-task-1-7030-lstm.pdf}
 		\includegraphics[width=0.3\textwidth]{fig4/data-3-ws50-task-1-7030-lstm.pdf}
@@ -371,6 +377,8 @@
 	\begin{figure*} 	
 	\includegraphics[width=0.3\textwidth]{fig4/data-1-task-3-7030-lstm.pdf}
 	\includegraphics[width=0.3\textwidth]{fig4/data-2-task-3-7030-lstm.pdf}
+	\end{figure*} 
+	\begin{figure*} 	
 	\includegraphics[width=0.3\textwidth]{fig4/data-3-ws10-task-3-7030-lstm.pdf}
 	\includegraphics[width=0.3\textwidth]{fig4/data-3-ws20-task-3-7030-lstm.pdf}
 	\includegraphics[width=0.3\textwidth]{fig4/data-3-ws50-task-3-7030-lstm.pdf}
@@ -379,7 +387,7 @@
 	\label{fig:lstm-task3-vector}
 	%\vspace{-10pt}  
 	\end{figure*}
-	\begin{table}[t]
+	\begin{table}[tbp]
 		\centering
 		\begin{tabular}{lcc}
 			\toprule
@@ -411,7 +419,7 @@
 	
 	
 	\bibliographystyle{ACM-Reference-Format}
-	\bibliography{bibliography} 
+	\bibliography{test-bib} 
 	
 \end{document}
 =======
