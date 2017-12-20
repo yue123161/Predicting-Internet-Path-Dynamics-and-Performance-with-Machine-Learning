@@ -184,6 +184,8 @@
 	
 	\section{Data Analysis}
 	\label{sec:dataAna}
+	%\hui{I think this is an important part, who will take this part?}
+	%\heng{Plots of temporally differentiated prediction targets are given here to show their behavior patterns in temporal domain, thus supporting the use of LSTMs.}
 	With careful review of the data used in the original paper, here we: $(i)$ show the authors had used the data incorrectly in the context of making predictions, and $(ii)$ reveal the temporal properties that the original method failed to employ but perfectly fits LSTM model (long short term memory neural networks), which we will later use to improve the performance.
 	\subsection{Justification of Data Processing}
 	The original paper \cite{wassermann2017predicting} made a major mistake on data employment: they implicitly used data from the future to predict events in the future, which is not possible. More specifically, all of their tests on the performance of \textit{NetPerfTrace} depend on statistics calculated out of data of all time, including the data they were to predict. Features like percentiles of route life, for example, take the route life of all routes during the whole week into account, including route $r_i$. However, these features still take part in predicting the residual life of $r_i$. It resembles guessing something you already knew.
@@ -192,6 +194,11 @@
 	
 	\subsection{Temporal Properties of the Data}
 	We believe temporally adjacent routes and \texttt{traceroute} records of a path share some common network nodes, thus their behavior contain implicit dependencies in temporal domain. While the data are organized in the order of time, the original method ignored this property but regard them as independent instances, i.e., the prediction for the next time step only depends on the features of the present, but does not use information given by more previous time steps. This manner fails the original method to capture even the most naive temporal dependencies. Here we do not provide strict proofs of the temporal dependencies that lie in these routes but simply throw some light on the possibility of their existence.
+	\begin{figure}[t] 
+		\includegraphics[width=0.3\textwidth]{fig/lstm.pdf} 
+		\caption{Illustration for LSTM.} 
+		\label{fig:lstm} 
+	\end{figure}
 	\begin{figure*} 	
 		\includegraphics[width=0.22\textwidth]{fig/total_life_8} 
 		\label{fig:3.1a}
@@ -250,6 +257,7 @@
 	
 	\subsection{Long Short-Term Memory}
 	In order to leverage the prediction targets' character of temporal locality, we further use Long Short-Term Memory (LSTM) to do time series modeling. More formally, we take $t-1$ most recent \texttt{traceroute} measurements features $(\mathbf{x_1},\mathbf{x_2},...,\mathbf{x_{t-2}},\mathbf{x_{t-1}})$and the current \texttt{traceroute} measurement feature $\mathbf{x_t}$ together as the input, i.e., $\mathbf{X}=(\mathbf{x_1},\mathbf{x_2},...,\mathbf{x_{t-1}},\mathbf{x_{t}})$. And the output is a single scalar $\hat{y}$ which is supposed to be the prediction of the target $y$.
+
 	Let $G_{\theta}(\mathbf{x_i},\mathbf{h_i})$ the $\theta$ parameterized LSTM, we have:
 	\begin{equation}
 	\mathbf{h_{i+1}}=G_{\theta}(\mathbf{x_i},\mathbf{h_i}),
@@ -261,7 +269,7 @@
 	\begin{equation}
 	\mathcal{L}=\frac{1}{n}\sum_{i=1}^{n}(y_i-\hat{y_i})^2.
 	\end{equation}
-	The training objective is to minimize $\mathcal{L}$.
+	The training objective is to minimize $\mathcal{L}$. The LSTM we adopt is illustrated in \textbf{Fig.\ref{fig:lstm}}
 	
 	
 	
