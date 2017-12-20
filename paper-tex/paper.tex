@@ -57,7 +57,7 @@
 		\state{China} 
 		\postcode{200240}
 	}
-	\email{felixwzh@outlook.com}
+	\email{felixwzh@sjtu.edu.cn}
 	
 	\author{Hao Wang}
 	\affiliation{%
@@ -66,7 +66,7 @@
 		\state{China} 
 		\postcode{200240}
 	}
-	\email{?@?.com}
+	\email{wrystal@sjtu.edu.cn}
 	
 	\author{Yuheng Zhi}
 	\affiliation{%
@@ -75,7 +75,7 @@
 		\state{China} 
 		\postcode{200240}
 	}
-	\email{?@?.com}
+	\email{zyh1996@sjtu.edu.cn}
 	
 	\author{Shukai Liu}
 	\affiliation{%
@@ -84,14 +84,15 @@
 		\state{China} 
 		\postcode{200240}
 	}
-	\email{?@?.com}
+	\email{83558399@qq.com}
 	
 	% The default list of authors is too long for headers.
 	\renewcommand{\shortauthors}{CN Group}
 	
 	
 	\begin{abstract}
-		We study the problem of predicting internet path dynamics and performance. We use \texttt{traceroute} measurement and machine learning models.
+		We study the problem of predicting internet path dynamics and performance with \texttt{traceroute} measurement and machine learning models. In this work, we first ponit out the drawbacks of the data processing of one previous work \cite{}, and reprocess the data in several more rational ways. We then conduct the experiments on the reprocessed data with random forest model. With 
+		the data analysis and experiment results' insights, we furthe leverage Long Short-Term Memory (LSTM), one kind of recurrent neural network (RNN), and get promissing results. We make our reprocessed data and experiment code publicly available\footnote{{https://github.com/felixwzh/CN-group-project}}.
 	\end{abstract}
 	
 	%
@@ -130,12 +131,12 @@
 	%\ccsdesc[100]{Networks~Network reliability}
 	
 	
-	\keywords{TODO}
+	%\keywords{TODO}
 	
 	
 	\maketitle
 	
-	\hui{I think we should focus on the process not the final result, which is also important.}
+	%\hui{I think we should focus on the process not the final result, which is also important.}
 	
 	\section{Introduction}
 	Internet paths change frequently due to inter/intra-domain routing changes, load balancing, and even misconfigurations and failures\cite{1}.
@@ -401,11 +402,11 @@
 	
 	However, when it comes to target $avgRTT_p(t)$, although LSTM models do have better performance when fed with vector input rather than scalar input, their $ABC$s are still smaller than those of random forest. We believe it is because there is less temporal locality with reference to $avgRTT_p(t)$. The more data we observed before, the better we can predict $avgRTT_p(t)$ in the future. Thus LSTM model cannot maximize its ability in predicting temporal patterns.
 	\section{Conclusions}
-	TODO
+	In this paper, We study the problem of predicting internet path dynamics and performance with \texttt{traceroute} measurement and machine learning models. We reprocess one dataset in several more rational ways and conduct extensive experiments on the reprocessed dataset with random forest and LSTM model. We find that some features e.g., $R_r(t)$, is more likely to have temporal locality than other features like $avgRTT_p(t)$, and this insight can guide us to select the most suitable model facing such tasks in computer network scenarios.
 	
-	\begin{acks}
-		TODO
-	\end{acks}
+	%\begin{acks}
+	%	TODO
+	%\end{acks}
 	
 	
 	
