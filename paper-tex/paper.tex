@@ -411,15 +411,15 @@
 	However, when it comes to target $avgRTT_p(t)$, although LSTM models do have better performance when fed with vector input rather than scalar input, their $ABC$s are still smaller than those of random forest. We believe it is because there is less temporal locality with reference to $avgRTT_p(t)$. The more data we observed before, the better we can predict $avgRTT_p(t)$ in the future. Thus LSTM model cannot maximize its ability in predicting temporal patterns.
 	\section{Conclusions}
 	In this paper, We study the problem of predicting internet path dynamics and performance with \texttt{traceroute} measurement and machine learning models. We reprocess one dataset in several more rational ways and conduct extensive experiments on the reprocessed dataset with random forest and LSTM model. We find that some features e.g., $R_r(t)$, is more likely to have temporal locality than other features like $avgRTT_p(t)$, and this insight can guide us to select the most suitable model facing such tasks in computer network scenarios.
-	
-	%\begin{acks}
-	%	TODO
-	%\end{acks}
-	
-	
+
+	\begin{acks}
+		TODO
+	\end{acks}
 	
 	\bibliographystyle{ACM-Reference-Format}
-	\bibliography{test-bib} 
+	\bibliography{bibliography} 	
+	
+	
 	
 \end{document}
 =======
