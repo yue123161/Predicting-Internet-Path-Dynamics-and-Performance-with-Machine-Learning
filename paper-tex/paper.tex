@@ -171,12 +171,14 @@
 	And the authors use three different ways of selecting input features: $(i)$  use all of the 69 features to predict each target, $(ii)$ when predicting target $X$, use corresponding feature set $F_X$, $(iii)$ after wrapper-based feature selection, use the top features for each target. And finally, what they get is the third way of choosing input features can achieve better results (though there is only minor difference in output results).
 	
 	
-	2. we can introduce some other machine learning methods applied in computer network scenarios. \hui{I'll take this part}
+	\paragraph{Other Applications of MLCN}
+	The last 2 decades has seen emerging applications of machine learning techniques used in computer networks \cite{kwon2017survey}. Classic methods, such as SVM, RBM, PCA and LDA, and deep learning methods including DBN, DNN and RNN, are both applied to areas like anomaly detection, web security, traffic prediction, etc. A usual procedure is to use autoencoders, both deep and classic ones, for dimensionality reduction and depend on SVM and DBN as a classifier.
 	
+	Here we mention a few representative works. Alom et al. \cite{alom2015intrusion} focus on intrusion detection system. Tao et al. \cite{tao2016big} search to build a data fusion algorithm with awareness of network security situation obtained by PCA, LDA and Fisher score. Lv et al. \cite{lv2015traffic} first develop deep learning methods in traffic flow prediction. Hou et al. \cite{hou2010malicious} aims to learn filtering rules for malicious contents automatically. Thottan et al.~\cite{thottan2003anomaly} are among the first to introduce self-learning methods to anomaly detection and a series of botnet detection methods follows up \cite{ranjan2014machine, singh2014big, beigi2014towards, zhao2013botnet}.
 	
+	\paragraph{Random Forest} Random Forest is a classical model in machine learning. It basically integrates a bunch of decision trees trained on different parts of the dataset, thus eliminating the risk of overfitting when a single tree is trained. A Random Forest makes predictions by averaging that of all the decision trees in it or by taking the majority vote in classification scenario. In addition, recent years have seen the development of Deep Random Forest, which employs the superior descriptive ability of deep models in the prediction process as well as maintaining the explanatory of decision tree-based models.
 	
-	3. very briefly introduce xgboost and lstm
-	
+	\paragraph{LSTM} LSTM is an improved version of the original RNN, which largely resolved the problem of gradient vanishing and explosion in original RNN and is capable of capturing multi-scale dependencies in sequential data. The main modification it made to the original RNN unit is to add multiplicative \textbf{gate} unit that control the proportions of information to forget/pass on to the next time step. Even more modern version of LSTM like BLSTM equip the model with the ability to learn from the future, but here we only use the basic LSTM to explore the time dependencies in the dataset.
 	
 	\section{Data Analysis}
 	\label{sec:dataAna}
