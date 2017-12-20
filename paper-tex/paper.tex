@@ -93,8 +93,8 @@
 	
 	
 	\begin{abstract}
-		We study the problem of predicting internet path dynamics and performance with \texttt{traceroute} measurement and machine learning models. In this work, we first ponit out the drawbacks of the data processing of one previous work \cite{}, and reprocess the data in several more rational ways. We then conduct the experiments on the reprocessed data with random forest model. With 
-		the data analysis and experiment results' insights, we furthe leverage Long Short-Term Memory (LSTM), one kind of recurrent neural network (RNN), and get promissing results. We make our reprocessed data and experiment code publicly available\footnote{{https://github.com/felixwzh/CN-group-project}}.
+		We study the problem of predicting Internet path dynamics and performance with \texttt{traceroute} measurement and machine learning models. In this work, we first point out the drawbacks of the data processing in one previous work \cite{}, and reprocess the data in several more rational ways. We then conduct the experiments on the reprocessed data with random forest model. With 
+		the data analysis and experiment results' insights, we further leverage Long Short-Term Memory (LSTM) model, one kind of recurrent neural network (RNN), and get promising results. We make our reprocessed data and experiment code publicly available\footnote{{https://github.com/felixwzh/CN-group-project}}.
 	\end{abstract}
 	
 	%
@@ -360,7 +360,22 @@
 	In order to better leverage the data to get better performance with our LSTM model, we take the same featues for LSTM as random forest. More specifically, $F_A$ for target $R_r(t)$ and $F_C$ for target $avgRTT_P(t)$.The results are are shown in \textbf{Table~\ref{tab:lstm-vector}}.
 	
 	In order to better leverage the data to get better performance with our LSTM model, we take the same featues for LSTM model as those for random forest model. More specifically, Features for target $R_r(t)$ and Features for target $avgRTT_P(t)$.The results are shown in \textbf{Fig.\ref{fig:lstm-task1-vector}}, \textbf{Fig.\ref{fig:lstm-task3-vector}} and \textbf{Tab.\ref{tab:lstm-vector}}.
-	
+	\begin{table}[tbp]
+		\centering
+		\begin{tabular}{lcc}
+			\toprule
+			{Target} &{$R_r(t)$}&{$avgRTT_p(t)$} \\
+			\midrule
+			\textit{data-1}& 0.5374 & 0.7310 \\
+			\textit{data-2}& 0.4956& 0.7039     \\
+			\textit{data-3-ws10}& 0.7649 & 0.7521 \\
+			\textit{data-3-ws20}& 0.6513& 0.6901    \\
+			\textit{data-3-ws50}& 0.5647& 0.7074  \\
+			\bottomrule	
+		\end{tabular}
+		\caption{ Experiment results ($ABC$) of LSTM models with vector input. }
+		\label{tab:lstm-vector}
+	\end{table}
 	\begin{figure*} 	
 		\includegraphics[width=0.3\textwidth]{fig4/data-1-task-1-7030-lstm.pdf}
 		\includegraphics[width=0.3\textwidth]{fig4/data-2-task-1-7030-lstm.pdf}
@@ -387,22 +402,7 @@
 	\label{fig:lstm-task3-vector}
 	%\vspace{-10pt}  
 	\end{figure*}
-	\begin{table}[tbp]
-		\centering
-		\begin{tabular}{lcc}
-			\toprule
-			{Target} &{$R_r(t)$}&{$avgRTT_p(t)$} \\
-			\midrule
-			\textit{data-1}& 0.5374 & 0.7310 \\
-			\textit{data-2}& 0.4956& 0.7039     \\
-			\textit{data-3-ws10}& 0.7649 & 0.7521 \\
-			\textit{data-3-ws20}& 0.6513& 0.6901    \\
-			\textit{data-3-ws50}& 0.5647& 0.7074  \\
-			\bottomrule	
-		\end{tabular}
-		\caption{ Experiment results ($ABC$) of LSTM models with vector input. }
-		\label{tab:lstm-vector}
-	\end{table}
+
 	
 	In general, the results consist with our previous observation that $R_r(t)$ has more temporal locality while $avgRTT_p(t)$ seems to have less or no temporal locality.
 	
