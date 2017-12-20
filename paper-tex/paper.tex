@@ -185,8 +185,8 @@
 	
 	\section{Data Analysis}
 	\label{sec:dataAna}
-	\hui{I think this is an important part, who will take this part?}
-	\heng{Plots of temporally differentiated prediction targets are given here to show their behavior patterns in temporal domain, thus supporting the use of LSTMs.}
+	%\hui{I think this is an important part, who will take this part?}
+	%\heng{Plots of temporally differentiated prediction targets are given here to show their behavior patterns in temporal domain, thus supporting the use of LSTMs.}
 	With careful review of the data used in the original paper, here we: $(i)$ show the authors had used the data incorrectly in the context of making predictions, and $(ii)$ reveal the temporal properties that the original method failed to employ but perfectly fits LSTM model (long short term memory neural networks), which we will later use to improve the performance.
 	\subsection{Justification of Data Processing}
 	The original paper \cite{oripaper} made a major mistake on data employment: they implicitly used data from the future to predict events in the future, which is not possible. More specifically, all of their tests on the performance of \textit{NetPerfTrace} depend on statistics calculated out of data of all time, including the data they were to predict. Features like percentiles of route life, for example, take the route life of all routes during the whole week into account, including route $r_i$. However, these features still take part in predicting the residual life of $r_i$. It resembles guessing something you already knew.
