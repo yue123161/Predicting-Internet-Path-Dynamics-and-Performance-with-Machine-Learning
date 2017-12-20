@@ -144,9 +144,12 @@ We study the problem of predicting internet path dynamics and performance. We us
 Internet paths change frequently due to inter/intra-domain routing changes, load balancing, and even misconfigurations and failures. Some of these changes can seriously disrupt performance, causing longer round-trip times, congestion, or even loss of connectivity. Thus, it is of great significant to predict Internet path dynamics and performance.
  
 
-In the original paper, the authors focus on the problem of predicting Internet path changes and path performance using \texttt{traceroute} measurements. They uses the recent route information of paths (route age for paths, route changes in past, average RTT, etc) to do some predictions of paths. Their are three predict targets: $(i)$ the remaining life time of a path (i.e., the time before a path changes), $(ii)$ the number of path changes in a future timeslot, and $(iii)$ the average RTT of a path in the next \texttt{traceroute} measurement.
+In the original paper, the authors focus on the problem of predicting Internet path changes and path performance using \texttt{traceroute} measurements. They uses the recent route information of paths (route age for paths, route changes in past, average RTT, etc) to do some predictions of paths. Their are three predict targets: $(i)$ the remaining life time of a route (i.e., the time before a route changes), $(ii)$ the number of route changes in a future timeslot, and $(iii)$ the average RTT  that the path $P$ will experience in the next \texttt{traceroute} measurement.
+
+ 
  
 
+ 
 To achieve these goals, it introduces a NETPerfTrace system, which relies on a standard random forest model for prediction. Moreover it uses extensive evaluation on the impact of different input features by studying the correlations between the inputs and the prediction targets, as well as target selection techniques.
  
 
@@ -170,8 +173,7 @@ And in our own work,firstly we reprocess the provided data in more resonable way
  
 1. introduce the original paper
  
-In the original paper, the problem they solve is to use random forest model to predict three labels for one path: $(i)$ the remaining life time of a path (i.e., the time before a path changes), $(ii)$ the number of path changes in a future timeslot, and $(iii)$ the average RTT of a path in the next \texttt{traceroute} measurement.
- 
+In the original paper, the problem they solve is to use random forest model to predict three labels for one path: $(i)$ the remaining life time of a route for one path at time $t$ (i.e., the time before a route changes), namely $R_r(t)$, $(ii)$ the number of route changes for one path $P$ in a future timeslot $T$, namely $rcP_T$  and $(iii)$ the average RTT that the path $P$ will experience in the next \texttt{traceroute} measurement, namely $avgRTT_P(t)$.
 
 And to achieve these three targets, 69 input features are used to describe the  statistical properties of route dynamics and path latency.
  
@@ -187,7 +189,6 @@ Then they study the correlation among the input features and the targets and app
 
 And the authors use three different ways of selecting input features: $(i)$  use all of the 69 features to predict each target, $(ii)$ when predicting target $X$, use corresponding feature set $F_X$, $(iii)$ after wrapper-based feature selection, use the top features for each target. And finally, what they get is the third way of choosing input features can achieve better results (though there is only minor differences in output results).
  
-
 
 2. we can introduce some other machine learning methods applied in computer network scenarios. \hui{I'll take this part}
  
@@ -303,31 +304,62 @@ No more solid evidence could be provided to prove the periodicity of these patte
 
 \section{Methodology}
 \subsection{Data Processing}
-
+We reprocess the data in several more rational ways, which in other words, predicting targets using the previous information only. And to be specific, we divide the data into two sets, namely training set and test set. We calculate statistical properties (global features) of paths using three different methods: $(i)$ use the global features (max, min, average, percentiles, etc.) in the training set to get the model and predict the targets of the latter $(1-k)\%$ data, $(ii)$ use the global feature of the former $k\%$ to train the models and update these features during the predicting procedure(i.e.,update the global features everytime there is a new \texttt{traceroute} measurement of a path), and $(iii)$ only use recent \texttt{traceroute} data of certain length (namely $window\ size$) in the training set to calculate the global features, and when using the trained model to predict targets, we only consider features calculated in  recent \texttt{traceroute} measurements of the same $window\ size$ . For convenience, in the following article, we use $data-i$ to represent reprocessing the original data using the $i$th method ($i$ can be either 1,2 or 3). And for the third method, we use $data-3-ws\#$ to indicate the $window\ size$ of $\#$.
 
 \subsection{LSTM Model}
 
 \section{Experiment}
-\subsection{Classic Models}
-We show the experiment results of the 3 different data we obtained, namely \textbf{K\&fix},\textbf{K\&update},\textbf{timeslot\&update}. We need to find some difference between our 3 data processing methods and the authors', i.e.,\textbf{origin}. 
+\subsection{Random Forest Model}
+In our experiment, firstly, we use the standard random forest model (the same as the original paper) with the reprocessed data.  In practice, we set $k = 70, 80$ respectively. And in the third method of processing data, the $window\ size$ is set to $10,20$ and $50$ recent \texttt{traceroute} measurements, respectively. We find that there is little difference when setting $k$ either to 70 or 80. Below are the results when $k = 70$. And we also define an evaluation metric $ABC$, which indicates the  area below the curve ($ABC\in[0,1]$). The closer $ABC$ is to $1$, the better prediction result it has. These figures in \textbf{Fig.\ref{fig:task1_RF}} and \textbf{Fig.\ref{fig:task3_RF}} and  illustrate the relationship between sample percentage and relative prediction error(i.e., $\mid Real - Predict\mid/ Real $). 
+\begin{figure*} [!htb] 
+	%\vspace{-4pt}  
+	\centering  
+	\includegraphics[width=0.3\textwidth]{fig4/data-1-task-1-7030-RF.jpg}  
+	\includegraphics[width=0.3\textwidth]{fig4/data-2-task-1-7030-RF.jpg} 
+\end{figure*} 
+\begin{figure*} 	
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-task-1-7030-windowsize10-RF.jpg} 
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-task-1-7030-windowsize20-RF.jpg}
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-task-1-7030-windowsize50-RF.jpg}
+	%\vspace{-20pt}  
+	\caption{Relative prediction errors for $R_r(t)$ using three different data processing methods, and $window\ size$ for the below three figures are 10,20 and 50.}
+	\label{fig:task1_RF}  
+	%\vspace{-10pt}  
+\end{figure*}
 
-The experiments we need to conduct are as follows:
-\begin{itemize}
+\begin{figure*} [!htb] 
+	%\vspace{-4pt}  
+	\centering  
+	\includegraphics[width=0.3\textwidth]{fig4/data-1-task-3-7030-RF.jpg}  
+	\includegraphics[width=0.3\textwidth]{fig4/data-2-task-3-7030-RF.jpg} 
+\end{figure*} 
+\begin{figure*} 	
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-task-3-7030-windowsize10-RF.jpg} 
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-task-3-7030-windowsize20-RF.jpg}
+	\includegraphics[width=0.3\textwidth]{fig4/data-3-task-3-7030-windowsize50-RF.jpg}
+	%\vspace{-20pt}  
+	\caption{Relative prediction errors for $avgRTT_P(t)$ using three different data processing methods, and $window\ size$ for the below three figures are 10,20 and 50.}
+	\label{fig:task3_RF}
+	%\vspace{-10pt}  
+\end{figure*}
 
-\item 1. \textbf{K\&fix}+RF
-\item 2. \textbf{K\&update}+RF
-\item 3. \textbf{timeslot\&update}+RF
-\item 4. \textbf{origin}+RF
-\item 5. \textbf{K\&fix}+xgBoost
-\item 6. \textbf{K\&update}+xgBoost
-\item 7. \textbf{timeslot\&update}+xgBoost
-\item 8. \textbf{origin}+xgBoost
-\end{itemize}
-
-
-\hui{Note}We first predict the route duration instead of resLife. Further study on the difference between these two predicting objective could be conduct if we have time. Currently, we predict the route duration for task 1, because we can only predict this when we use LSTM.
-
-
+Table 1 describes the $ABC$ in each figure.
+\begin{table}[tbp]
+	\centering  % 表居中
+	\begin{tabular}{lcc} 
+		\hline
+		Target &$R_r(t)$ &$avgRTT_P(t)$ \\ \hline
+		$data-1$ & 0.4016    &0.8124   \\        
+		$data-2$ &0.3985 &0.8261 \\        
+		$data-3-ws10$  &0.7132 &0.8018 \\
+		$data-3-ws20$ &0.6314 &0.7910 \\
+		$data-3-ws50$ &0.5359  &0.7790 \\ \hline
+	\end{tabular}
+	\caption{The $ABC$ of curves
+		 in \textbf{Fig.\ref{fig:task1_RF}} and \textbf{Fig.\ref{fig:task3_RF}} }
+	 \label{tab:result_RF}
+\end{table}
+From \textbf{Tab.\ref{tab:result_RF}}, it can be inferred that for target $avgRTT_P(t)$: there is minor difference using five different methods to process the data. They all achieve a relatively good result, which also indicates that for average RTT reported from \texttt{traceroute} measurement, it is not sensitive to the temporal locality. However, for the first predicting target, $R_r(t)$, it is very sensitive to the temporal locality. It changes rapidly as time changes. And to achieve better prediction result, using too much previous data will result in noise and decrease the performance of the model. Because from \textbf{Tab.\ref{tab:result_RF}}, we can clearly observe that $data-3-ws10$ achieves larget $ABC$ compared with other processing methods. It considers only the recent data in a relatively short time slot. Indeed, it is reasonable to get such conclusion, for the remaining life time of a route is always closely related to their route age (which can be indicated from the previous \texttt{traceroute} data).
 \subsection{Deep Models}
 
 There are two kinds of input for the LSTM at each timestep, (i) one simple scalar (ii) a vector.
