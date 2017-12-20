@@ -328,15 +328,55 @@ The experiments we need to conduct are as follows:
 \hui{Note}We first predict the route duration instead of resLife. Further study on the difference between these two predicting objective could be conduct if we have time. Currently, we predict the route duration for task 1, because we can only predict this when we use LSTM.
 
 
-\subsection{Deep Models}
+\subsection{LSTM Model}
 
-There are two kinds of input for the LSTM at each timestep, (i) one simple scalar (ii) a vector.
-The experiments we need to conduct are as follows:
-\begin{itemize}
-\item scalar input + LSTM
-\item vector input + LSTM
-\end{itemize}
+ As we observed above, among the 3 different \textit{window size} (10, 20, 50), \textit{window size} of 10 alway has the best performance. Thus, we set the timesteps for our LSTM model to be 10, either.  We adopt two kinds of input for the LSTM at each timestep, (i) scalar (ii) vector.
+\subsubsection{Scalar Input}
+\begin{table}[t]
+	\centering
+	\begin{tabular}{lcc}
+		\toprule
+		{Target} &{$R_r(t)$} &{$avgRTT_P(t)$}\\
+		\midrule
+		\textit{LSTM-scalar-input} & 0.5264& 0.5530  \\
+		\bottomrule
+	\end{tabular}
+	\caption{ Experiment results of LSTM models with scalar input. }
+	\label{tab:lstm-scalar}
+\end{table}
 
+Since we have observed some local temporal patterns with the prediction targets, The most naive approach is to feed LSTM with the previous observed scalar without any statistics of it. \textbf{Table \ref{tab:lstm-scalar}} shows the results.
+
+As we can see, for target $R_r(t)$, the ABC of LSTM is higher than random forest with \textit{data-1} and \textit{data-2}, but is much lower than random forest with \textit{data-3-ws10}. This shows empirical evidence that there are temporal locality with $R_r(t)$ of a path. We can infer $R_r(t)$ of a path from its recent routes better than using current features only.
+
+To the contrast, for target $avgRTT_P(t)$, the $ABC$ of LSTM is lower than random forest in all cases, which may indicates that $avgRTT_P(t)$ is less likely to have the temporal locality.
+
+For both tasks, use scalar input for LSTM cannot outperform random forest steadily.
+
+\subsubsection{Vector Input}
+In order to better leverage the data to get better performance with our LSTM model, we take the same featues for LSTM as random forest. More specifically, $F_A$ for target $R_r(t)$ and $F_C$ for target $avgRTT_P(t)$.The results are are shown in \textbf{Table~\ref{tab:lstm-vector}}.
+\begin{table}[t]
+	\centering
+	\begin{tabular}{lcc}
+		\toprule
+		{Target} &{$R_r(t)$}&{$avgRTT_p(t)$} \\
+		\midrule
+		\textit{data-1}& 0.5374 & 0.7310 \\
+		\textit{data-2}& 0.4956& 0.7039     \\
+		\textit{data-3-ws10}& 0.7649 & 0.7521 \\
+		\textit{data-3-ws20}& 0.6513& 0.6901    \\
+		\textit{data-3-ws50}& 0.5647& 0.7074  \\
+		\bottomrule	
+	\end{tabular}
+	\caption{ Experiment results ($ABC$) of LSTM models with vector input. }
+	\label{tab:lstm-vector}
+\end{table}
+
+In general, the results is consist with our previous observation that $R_r(t)$ has more temporal locality while $avgRTT_p(t)$ seems has few or no temporal locality.
+
+More specificly, for target $R_r(t)$, LSTM outperforms random forest in all the 5 data set with a maximum $ABC=0.7649$. And when fed with vector input, the LSTM has a significant lift in performance than LSTM with scalar input, which shows that high quality features can be benefit to not only classic shadow models like random forest, but also \textit{deep} models.
+
+However, when it comes to target $avgRTT_p(t)$, although LSTM does has better performance when fed with vector input rather than scalar input, its $ABC$ is still lower than random forest's. We believe it is because there is less temporal locality with $avgRTT_p(t)$. The more data you observed before, the better you can predict $avgRTT_p(t)$ in the future. Thus LSTM model cannot maximize its ability in predicting temporal patterns.
 \section{Conclusions}
 TODO
 
