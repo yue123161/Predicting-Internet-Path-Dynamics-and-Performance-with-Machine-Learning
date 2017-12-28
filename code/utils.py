@@ -1,3 +1,4 @@
+import cPickle as pkl
 import csv
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,7 +8,13 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 import xgboost as xgb
-
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.layers import LSTM,Dropout
+from sklearn.preprocessing import MinMaxScaler
+import numpy as np
+from math import sqrt
+import tensorflow as tf
 def output_real_and_predict_data(y_real,y_pred,path,filename):
     """
     rt
@@ -24,7 +31,8 @@ def output_real_and_predict_data(y_real,y_pred,path,filename):
         for val in y_pred:
             fout.write(str(val) + ',\n')
 
-    draw(path+filename+'_real.csv',path + filename + '_predict.csv',filename,path+filename+'.jpg')
+    # draw(path+filename+'_real.csv',path + filename + '_predict.csv',filename,path+filename+'.jpg')
+    draw(path + filename + '_real.csv', path + filename + '_predict.csv', filename, path + filename )
 
     print "finish"+path+filename
 
@@ -49,9 +57,41 @@ def draw(realfilePath, predictfilePath, graphTitle, outputPath):
     length = len(relativeError)
     for i in range(length):
         sampleRate.append(100 * (i + 1) / length)
+    area = getArea(relativeError, sampleRate)
 
-    _draw(relativeError, sampleRate, graphTitle, outputPath)
+    print "++++++++++++++++++++++++++++++++++++++++++++"
+    print area,"area!!"
+    print "++++++++++++++++++++++++++++++++++++++++++++"
+    with open('../data/temp_result/rough_result.txt','a') as fout:
+        fout.write("\n++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
+        fout.write(outputPath)
+        fout.write("\n")
+        fout.write("area:"+str(area))
 
+    # _draw(relativeError, sampleRate, graphTitle, outputPath)
+
+def getArea(xData,yData):
+	S = 0
+	breakFlag = False
+	for i,x in enumerate(xData):
+		if i == 0:
+			continue
+		if xData[i] > 100:
+			xLen = 100 - xData[i-1]
+			yLen1 = yData[i-1]
+			yLen2 = yData[i-1]
+			breakFlag = True
+		else:
+			xLen = xData[i] - xData[i-1]
+			yLen1 = yData[i-1]
+			yLen2 = yData[i]
+		S += (yLen1 + yLen2)*xLen/2
+		if breakFlag:
+			break
+
+	if not breakFlag:
+		S += (100 - xData[-1])*yData[-1]
+	return S/(100*100)
 
 def _draw(xData, yData, title, outputPath):
     x = np.array(xData)
@@ -74,7 +114,9 @@ def _draw(xData, yData, title, outputPath):
     axes.set_ylim([0, 100])
 
     # plt.show()
-    plt.savefig(outputPath)
+    plt.savefig(outputPath+ '.pdf')
+    plt.savefig(outputPath + '.jpg')
+
     plt.close()
 
 
@@ -335,9 +377,7 @@ def get_lstm_data_from_df(train_df,test_df,task,time_steps,min_samples_for_path=
 
 def get_lstm_data_from_path(train_path,test_path,task,time_steps,min_samples_for_path=5):
     """
-
     like get_lstm_data_from_df
-
     :param train_path:
     :param test_path:
     :param task:
@@ -351,7 +391,12 @@ def get_lstm_data_from_path(train_path,test_path,task,time_steps,min_samples_for
     if len(train_file_list)!= len(test_file_list):
         print 'length error!'
         exit(-1)
-    for i in range(len(10)):
+    print len(train_file_list),'df to process'
+    for i in range(len(train_file_list)):
+        if i%30==0:
+            print i
+    # for i in range(10):
+
         if train_file_list[i] == test_file_list[i]:
             train_X_tmp, train_y_tmp, test_X_tmp, test_y_tmp, feature_num = get_lstm_data_from_df(
                 train_df=pd.read_csv(train_path+train_file_list[i]),
@@ -360,15 +405,90 @@ def get_lstm_data_from_path(train_path,test_path,task,time_steps,min_samples_for
                 time_steps=time_steps,
                 min_samples_for_path=min_samples_for_path
             )
-            train_X.append(train_X_tmp)
-            train_y.append(train_y_tmp)
-            test_X.append(test_X_tmp)
-            test_y.append(test_y_tmp)
+            # print train_X_tmp.shape
+            if train_X_tmp!=None and train_y_tmp!=None and test_X_tmp!=None and test_y_tmp!=None:
+
+                train_X.append(train_X_tmp)
+                train_y.append(train_y_tmp)
+                test_X.append(test_X_tmp)
+                test_y.append(test_y_tmp)
+            else:
+
+                print 'oops',i
+
+
     train_X=np.concatenate(train_X,0)
+    print "trainx"
     train_y=np.concatenate(train_y,0)
+    print "trainy"
+
     test_X=np.concatenate(test_X,0)
+    print "trx"
+
     test_y=np.concatenate(test_y,0)
+    print "ty"
+
     return train_X, train_y, test_X, test_y, feature_num
 
+def generate_lstm_data_to_pkl(train_path, test_path, task, time_steps, file_name_in_path,min_samples_for_path=5):
+    train_X, train_y, test_X, test_y, feature_num=get_lstm_data_from_path(train_path, test_path, task, time_steps, min_samples_for_path=5)
+    with open(file_name_in_path,'w') as fout:
+        l = []
+        l.append(train_X), l.append(train_y), l.append(test_X), l.append(test_y), l.append(feature_num)
+        pkl.dump(l, fout)
 
+
+
+def LSTM_task(pkl_data_path,task_name,time_steps=10,epochs=10,batch_size=8192,dropout_rate=0.5,hidden_dimension=128):
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True
+    session = tf.Session(config=config)
+
+    # reshape input to be [samples, time steps, features]
+    with open(pkl_data_path, 'rb') as fin:  # interface between whole model and training data
+        trainX, trainY, testX, testY, feature_len = pkl.load(fin)
+    train_samples = trainX.shape[0]
+    test_samples = testX.shape[0]
+    trainX = np.reshape(trainX, (-1, feature_len))
+    testX = np.reshape(testX, (-1, feature_len))
+
+    # scale the data
+    trainAll = np.concatenate([trainX, testX], 0)
+    scalerX = MinMaxScaler(feature_range=(0, 1))
+    scalerX.fit(trainAll)
+    trainX = scalerX.transform(trainX)
+    testX = scalerX.transform(testX)
+    trainX = np.reshape(trainX, (train_samples, -1, feature_len))
+    testX = np.reshape(testX, (test_samples, -1, feature_len))
+
+    trainYAll = np.concatenate([trainY, testY], 0)
+    scalerY = MinMaxScaler(feature_range=(0, 1))
+    scalerY.fit(trainYAll)
+    trainY = scalerY.transform(trainY)
+    testY = scalerY.transform(testY)
+
+    # MODLE
+    model = Sequential()
+    model.add(LSTM(hidden_dimension, input_shape=(time_steps, feature_len)))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(1))
+    model.compile(loss='mean_squared_error', optimizer='adam')
+
+    # train
+    model.fit(trainX, trainY, epochs=epochs, batch_size=batch_size, verbose=2)
+
+    trainPredict = model.predict(trainX)
+    testPredict = model.predict(testX)
+
+    trainPredict = scalerY.inverse_transform(trainPredict)
+    trainY = scalerY.inverse_transform(trainY)
+    testPredict = scalerY.inverse_transform(testPredict)
+    testY = scalerY.inverse_transform(testY)
+
+    trainScore = sqrt(mean_squared_error(trainY, trainPredict[:, 0]))
+    print('Train Score: %.2f RMSE' % (trainScore))
+    testScore = sqrt(mean_squared_error(testY, testPredict[:, 0]))
+    print('Test Score: %.2f RMSE' % (testScore))
+
+    output_real_and_predict_data(testY, testPredict[:, 0], '../data/temp_result/', task_name)
 
