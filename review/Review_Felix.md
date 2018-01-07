@@ -62,9 +62,68 @@
 
   ![数据发送](.\数据发送.png)
 
-  ​
 
-## **第** 3 章 数据链路层 
+## 第 2 章 物理层
+
+### 2.1 物理层的基本概念 
+
+### 2.2 数据通信的基础知识 
+
+四种编码是什么？
+
+### 2.3 物理层下面的传输媒体 
+
+- 信噪比公式
+$$
+信噪比(dB)=10\log_{10}\frac{S}{N}
+$$
+
+- 香农公式 信道的极限传输速率是 
+
+$$
+C=W\log_2(1+\frac{S}{N})
+$$
+
+- $W$是带宽，$S$是信号的平均功率 $N$是高斯噪声的平均功率 
+  - 带宽或者信噪比越大，则信道的极限传输速率就越高
+  - 若定了，则只能让一个码元携带更多比特的信息量
+
+### 2.4 信道复用技术
+
+- FDM  频分复用的所有用户在同样的时间占用不同的带宽资源
+
+
+- TDM 时分复用可能会造成线路资源的浪费
+
+
+- 使用时分复用系统传送计算机数据时，由于计算机数据的突发 性质，用户对分配到的子信道的利用率一般是不高的
+
+#### CDMA 
+
+### 2.5 宽带接入技术
+
+- 双向速率之 和超过 **200 kbit/s** 就是宽带。
+
+### ADSL 
+
+- 上行慢，下行快
+
+
+- DMT
+  - 频分复用
+- 不用改造现有线路
+
+### HFC 
+
+- 对现有的CATV网进行了改造
+
+### FTTx
+
+
+
+
+
+## 第 3 章 数据链路层 
 
 数据链路层的主要作用是如何**可靠**的把数据传输到相邻节点
 
@@ -139,6 +198,11 @@
 
 #### 3.3.2 CSMA/CD 协议
 
+##### 以太网为了通讯方便的措施
+
+1. **无连接**的工作方式，以太网是尽最大努力交付。
+2. 以太网发送的数据都是用**曼切斯特**编码的信号
+
 Carrie Sense Multiple Access with Collision Detection 载波监听多点接入/碰撞检测
 
 **争用期**：512比特时间
@@ -155,6 +219,14 @@ Carrie Sense Multiple Access with Collision Detection 载波监听多点接入/�
    2. 若果有碰撞，则立即停止发送，并且发送一个人为干扰信号，执行指数退避 算法，等待r 倍的512比特时间。再开始1。如果16次还不成功则停止发送并且上报错。
 
 #### 3.3.3 使用集线器的星形拓扑
+
+##### 星形以太网10BASE-T 标准
+
+- 10：10Mb/s
+- BASE: 连接线上是基带信号
+- T: 使用双绞线
+
+
 
 - 双绞线以太网总是和集线器配合使用的。
 - 使用集线器的以太网在逻辑上还是一个总线网，各站共享逻辑上的总线，使用的还是CSMA/CD协议
@@ -179,6 +251,12 @@ Carrie Sense Multiple Access with Collision Detection 载波监听多点接入/�
   - 当48位全为1时，是**广播**地址
   - 适配器检查MAC地址
 
+- MAC帧的种类
+
+  - 单播帧，一对一
+  - 广播帧，一对全体
+  - 多播帧，一对多
+
 - MAC帧的格式-共5个字段，最短64字节长
 
   1. 目的地址字段-6字节
@@ -193,7 +271,7 @@ Carrie Sense Multiple Access with Collision Detection 载波监听多点接入/�
   - 对收到 的MAC帧
     - 如果长度不是整数字节，丢弃
     - 如果FCS校验失败，丢弃
-    - 如果数据字段的长度不在46~1500字节之间
+    - 如果数据字段的长度不在46~1500字节之间，丢弃
 
 ### 3.4 扩展的以太网
 
@@ -208,6 +286,17 @@ Carrie Sense Multiple Access with Collision Detection 载波监听多点接入/�
   - 如果不同碰撞域的数据率不一样，则不能连在一起
 
 #### 3.4.2 在数据链路层扩展以太网
+
+- 使用网桥的优点：
+  1. 过滤通信量，增大吞吐量
+  2. 扩大了物理范围
+  3. 容错性
+  4. 可互联不同物理层、MAC子层、不同速率的以太网
+- 使用网桥的缺点：
+  1. 时延增加
+  2. 在MAC层无流量控制，容易失帧
+  3. 只适合小型以太网
+
 
 - 早期使用网桥，现在使用以太网交换机
 - 网桥：根据MAC帧的目的地址对收到的帧进行转发和过滤
@@ -1031,3 +1120,36 @@ Dynamic Host Configuration Protocol
 
 - 分布式散列表DHT （DIstributed Hash Table）
 - Chord算法
+
+
+
+## 英文名词
+
+- TDM
+  - 时分复用 (Time Division Multiplexing)
+
+-  FDM
+  - 频分复用 (Frequency Division Multiplexing)
+- CDMA
+  - 码分多址  (Code Division Multiple Access)
+- DSSS 
+  - 直接序列扩频 (Direct Sequence Spread Spectrum)
+- ADSL
+  - Asymmetric Digital Subscriber Line
+- DMT
+  - Discrete Multi-Tone
+- HFC
+  - Hybrid Fiber Coax
+- FTTx
+  - Fiber To The x
+- ISP
+  - Internet Service Provider
+- PPP
+  - Ponit-to-Point Protocol
+- CRC
+  - Cyclic Redundancy Check
+- FCS
+  - Frame Check Sequence
+- CSMA/CD
+  - Carrier Sense Multiple Access with Collision Detection
+
