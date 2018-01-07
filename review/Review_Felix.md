@@ -60,7 +60,7 @@
   * 电信号/光信号从发送端物理层到接收端物理层
   * 逐一去掉首部/尾部，层层上交
 
-  ![数据发送](D:\Learning\OneDrive\Networks\master\review\数据发送.png)
+  ![数据发送](.\数据发送.png)
 
   ​
 
@@ -736,7 +736,7 @@ ARQ：Automatic Repeat reQuest
 - 快重传
 - 快恢复
 
-![拥塞控制](C:\Users\felix\Desktop\git\CN-group-project\review\拥塞控制.png)
+![拥塞控制](.\拥塞控制.png)
 
 - 乘法减小
 - 加法增大
