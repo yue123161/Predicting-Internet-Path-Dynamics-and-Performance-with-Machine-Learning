@@ -8,6 +8,8 @@ This project is based on the Workshop paper
 
 and the authors' release of [**NETPerfTrace**](https://github.com/SAWassermann/NETPerfTrace)
 
+Our report is [here](https://github.com/wrystal/cn/blob/master/paper.pdf)
+
 ## 简介
 
 ### 文件路径
