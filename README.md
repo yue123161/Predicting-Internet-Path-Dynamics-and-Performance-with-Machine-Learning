@@ -1,14 +1,11 @@
-# Computer Network Course Project
+## Predicting Internet Path Dynamics and Performance with Machine Learning
 
-### Predicting Internet Path Dynamics and Performance with Machine Learning
+This project is based on the Workshop paper [NETPerfTrace - Predicting Internet Path Dynamics and Performance with Machine Learning](http://orbi.ulg.ac.be/handle/2268/211667) and the authors' release of [NETPerfTrace](https://github.com/SAWassermann/NETPerfTrace).
 
-This project is based on the Workshop paper 
+Our full report is [here](https://github.com/wrystal/cn/blob/master/paper.pdf).
 
-[**NETPerfTrace - Predicting Internet Path Dynamics and Performance with Machine Learning**](http://orbi.ulg.ac.be/handle/2268/211667)
-
-and the authors' release of [**NETPerfTrace**](https://github.com/SAWassermann/NETPerfTrace)
-
-Our report is [here](https://github.com/wrystal/cn/blob/master/paper.pdf)
+In this work, we first point out the drawbacks of the data processing in the original work, and reprocess the data in
+several more rational ways. Then data analysis and experiments are conducted on the reprocessed data with Random Forest model (original method) before evident temporal locality is discovered in the behavior of the paths. Further more, inspired by the temporal property, we leverage LSTM(Long Short-Term Memory) model, and get promising results. We make our [reprocessed data and experiment code](https://github.com/wrystal/Predicting-Internet-Path-Dynamics-and-Performance-with-Machine-Learning) publicly available.
 
 ## 简介
 
